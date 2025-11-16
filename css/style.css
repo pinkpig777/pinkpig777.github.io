@@ -5,6 +5,7 @@
   --primary: #5e6677;
   --text: #1a1a1a;
   --bg: #ffffff;
+
   --gray-light: #f3f4f6;
   --gray-dark: #111827;
 
@@ -26,24 +27,28 @@
 }
 
 /* =========================================
-   GLOBAL RESET + BASE STYLES
+   GLOBAL RESET + BASE
 ========================================= */
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
-  color: var(--text);
   background: var(--bg);
+  color: var(--text);
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   font-size: var(--font-base);
   line-height: var(--line-normal);
-
   display: flex;
   flex-direction: column;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
 }
 
 /* =========================================
@@ -51,14 +56,14 @@ body {
 ========================================= */
 h1 {
   font-size: var(--font-xxl);
-  line-height: var(--line-tight);
   margin-bottom: var(--space-sm);
+  line-height: var(--line-tight);
 }
 
 h2 {
   font-size: var(--font-xl);
-  line-height: var(--line-tight);
   margin-bottom: var(--space-sm);
+  line-height: var(--line-tight);
 }
 
 p,
@@ -84,6 +89,33 @@ main {
 section {
   margin-bottom: var(--space-xl);
 }
+
+/* =========================================
+   NAVIGATION
+========================================= */
+nav a {
+  margin-right: var(--space-sm);
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  transition: width 0.2s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* =========================================
+   HERO SECTION
+========================================= */
 .hero {
   display: flex;
   align-items: center;
@@ -103,39 +135,13 @@ section {
 }
 
 .hero-image img {
-  max-width: 280px;
   width: 100%;
+  max-width: 280px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-/* =========================================
-   NAVIGATION
-========================================= */
-nav a {
-  position: relative;
-  margin-right: var(--space-sm);
-  text-decoration: none;
-  color: var(--text);
-}
 
-nav a::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  left: 0;
-  bottom: -2px;
-  transition: width 0.2s ease;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
-a {
-  color: var(--primary);
-}
+/* CTA Button */
 .cta-btn {
   display: inline-block;
   margin-top: var(--space-md);
@@ -143,16 +149,16 @@ a {
   background: var(--primary);
   color: white;
   border-radius: 6px;
-  text-decoration: none;
   font-size: var(--font-md);
   transition: background 0.2s ease;
 }
 
 .cta-btn:hover {
-  background: #9fb7f6;
+  background: #7c8799;
 }
+
 /* =========================================
-   PROJECTS GRID + CARD
+   PROJECTS GRID + CARDS
 ========================================= */
 .projects {
   display: grid;
@@ -182,9 +188,7 @@ a {
   padding-left: var(--space-sm);
 }
 
-/* =========================================
-   TAGS
-========================================= */
+/* Tags */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -195,12 +199,15 @@ a {
 .tag {
   padding: 4px 10px;
   background: #e5e7eb;
-  color: #111827;
+  color: var(--gray-dark);
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 500;
 }
-/*CV*/
+
+/* =========================================
+   CV PAGE
+========================================= */
 .cv-section {
   max-width: 900px;
   margin: 0 auto;
@@ -217,8 +224,8 @@ a {
   width: 100%;
   height: 900px;
   border: none;
-  margin-top: var(--space-md);
   border-radius: 10px;
+  margin-top: var(--space-md);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -227,7 +234,10 @@ a {
     height: 600px;
   }
 }
-/* Contact Page */
+
+/* =========================================
+   CONTACT PAGE
+========================================= */
 .contact-section {
   max-width: 700px;
   margin: 0 auto;
@@ -236,7 +246,6 @@ a {
 }
 
 .contact-subtext {
-  font-size: var(--font-md);
   color: #555;
   margin-bottom: var(--space-lg);
 }
@@ -263,17 +272,17 @@ a {
 }
 
 .contact-item a {
-  text-decoration: none;
   color: var(--primary);
-  font-weight: 500;
   font-size: var(--font-lg);
+  font-weight: 500;
 }
 
 .contact-item a:hover {
   text-decoration: underline;
 }
+
 /* =========================================
-    Footer
+   FOOTER
 ========================================= */
 .footer-modern {
   background: var(--gray-light);
@@ -283,25 +292,16 @@ a {
 
 .footer-content {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: var(--space-lg);
   margin-bottom: var(--space-md);
-}
-
-.footer-content h3 {
-  margin: 0 0 8px 0;
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
-
-.footer-links a {
-  text-decoration: none;
-  color: var(--text);
 }
 
 .footer-links a:hover {
@@ -314,8 +314,9 @@ a {
   font-size: var(--font-sm);
   color: #555;
 }
+
 /* =========================================
-   MOBILE RESPONSIVE
+   RESPONSIVE
 ========================================= */
 @media (max-width: 768px) {
   body {
@@ -324,8 +325,8 @@ a {
 
   nav {
     flex-direction: column;
-    gap: var(--space-xs);
     align-items: flex-start;
+    gap: var(--space-xs);
   }
 
   h1 {
@@ -335,17 +336,10 @@ a {
   h2 {
     font-size: 1.2rem;
   }
+
   .hero {
     flex-direction: column;
     text-align: center;
-  }
-
-  .hero-text {
-    order: 1;
-  }
-
-  .hero-image {
-    order: 0;
   }
 
   .hero-image img {
