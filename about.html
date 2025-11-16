@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>About</title>
+    <div id="head-include"></div>
+    <link rel="stylesheet" href="css/style.css" />
+    <script>
+      fetch("partials/head.html")
+        .then((res) => res.text())
+        .then(
+          (data) => (document.getElementById("head-include").innerHTML = data)
+        );
+      fetch("partials/header.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("header").innerHTML = data));
+
+      fetch("partials/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
+    </script>
+  </head>
+
+  <body>
+    <!-- =========================
+         HEADER / NAVIGATION
+    ========================== -->
+    <div id="header"></div>
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+    <main>
+      <!-- ABOUT SECTION -->
+      <section class="about">
+        <h1>About Me</h1>
+
+        <p>
+          I'm Charlie Chiu, a Master of Computer Science student at Texas A&M
+          University, focusing on AI-powered computer vision systems, backend
+          engineering, and full-stack product development.
+        </p>
+
+        <p>
+          I’m driven by building systems that work in the real world. My past
+          work spans from designing a PPE detection pipeline and creating a
+          Unity-based dataset generator for Image Quality Assessment, to
+          building full-stack applications like AI-powered email automation
+          tools.
+        </p>
+
+        <p>
+          I enjoy working across the stack – from model integration and backend
+          infrastructure to frontend interfaces – and I like turning ambiguous
+          requirements into functioning products.
+        </p>
+      </section>
+
+      <section class="skills">
+        <h2>Technical Skills</h2>
+
+        <ul>
+          <li>
+            <strong>Languages:</strong> Python, JavaScript, TypeScript, C, C++,
+            Ruby, Verilog
+          </li>
+          <li><strong>Frameworks:</strong> React, Ruby on Rails, FastAPI</li>
+          <li><strong>Databases:</strong> PostgreSQL, MongoDB, Redis</li>
+          <li>
+            <strong>ML/Tools:</strong> PyTorch, OpenCV, NumPy, Scikit-learn
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+    <div id="footer"></div>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Contact</title>
+    <div id="head-include"></div>
+    <link rel="stylesheet" href="css/style.css" />
+    <script>
+      fetch("partials/head.html")
+        .then((res) => res.text())
+        .then(
+          (data) => (document.getElementById("head-include").innerHTML = data)
+        );
+      fetch("partials/header.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("header").innerHTML = data));
+
+      fetch("partials/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
+    </script>
+  </head>
+  <body>
+    <!-- =========================
+         HEADER / NAVIGATION
+    ========================== -->
+    <div id="header"></div>
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+    <main>
+      <section class="contact-section">
+        <h1>Get in Touch</h1>
+
+        <p class="contact-subtext">
+          Whether it's regarding an opportunity, a project, or just a friendly
+          chat, feel free to reach out. I usually reply within a day.
+        </p>
+
+        <div class="contact-card">
+          <div class="contact-item">
+            <span class="contact-icon">📧</span>
+            <a href="mailto:charly729.chiu@gmail.com"
+              >charly729.chiu@gmail.com</a
+            >
+          </div>
+
+          <div class="contact-item">
+            <span class="contact-icon">🔗</span>
+            <a
+              href="https://www.linkedin.com/in/charliechiu0729/"
+              target="_blank"
+            >
+              LinkedIn Profile
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+    <div id="footer"></div>
+  </body>
+</html>

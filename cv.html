@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CV - Charlie Chiu</title>
+    <div id="head-include"></div>
+
+    <script>
+      fetch("partials/head.html")
+        .then((res) => res.text())
+        .then(
+          (data) => (document.getElementById("head-include").innerHTML = data)
+        );
+
+      fetch("partials/header.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("header").innerHTML = data));
+
+      fetch("partials/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
+    </script>
+  </head>
+
+  <body>
+    <div id="header"></div>
+
+    <main>
+      <section class="cv-section">
+        <h1>My CV</h1>
+        <p class="cv-subtext">
+          This page always shows the latest version of my resume.
+        </p>
+
+        <iframe
+          class="cv-iframe"
+          src="https://drive.google.com/file/d/1RcKp3hhPZpK6C0qR2X3rIrt-pn3OwN-0/preview"
+          title="Charlie Chiu CV"
+        ></iframe>
+      </section>
+    </main>
+
+    <div id="footer"></div>
+  </body>
+</html>
