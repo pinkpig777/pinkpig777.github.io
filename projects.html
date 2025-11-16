@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Projects</title>
-    <div id="head-include"></div>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>Projects Charlie Chiu</title>
+
+    <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Selected software engineering and AI projects created by Charlie Chiu, including AI systems, full-stack apps, and real-world engineering builds."
+    />
+    <meta
+      name="keywords"
+      content="Charlie Chiu, Projects, Software Engineer, AI, Computer Vision, Full Stack, Portfolio"
+    />
+    <meta name="author" content="Charlie Chiu" />
+
+    <meta property="og:title" content="Projects – Charlie Chiu" />
+    <meta
+      property="og:description"
+      content="Explore AI, computer vision, and full-stack engineering projects by Charlie Chiu."
+    />
+    <meta
+      property="og:image"
+      content="https://charliechiu.github.io/assets/img/profile.jpg"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://charliechiu.github.io/projects.html"
+    />
+
     <script>
-      fetch("partials/head.html")
-        .then((res) => res.text())
-        .then(
-          (data) => (document.getElementById("head-include").innerHTML = data)
-        );
       fetch("partials/header.html")
         .then((res) => res.text())
         .then((data) => (document.getElementById("header").innerHTML = data));
@@ -19,36 +44,25 @@
         .then((data) => (document.getElementById("footer").innerHTML = data));
     </script>
   </head>
+
   <body>
-    <!-- =========================
-         HEADER / NAVIGATION
-    ========================== -->
     <div id="header"></div>
 
-    <!-- =========================
-         MAIN CONTENT
-    ========================== -->
     <main>
       <section class="projects-section">
         <h1>Personal Projects</h1>
-        <p>
-          Below are some of my selected projects. This page will be redesigned
-          later in React.
-        </p>
+        <p>Below are some of my selected projects.</p>
 
-        <!-- Projects Grid -->
         <div class="projects">
           <!-- Project 1 -->
           <div class="project-card">
             <h2>Realistic GameScene Image Quality Assessment</h2>
-
             <div class="tags">
               <span class="tag">Python</span>
               <span class="tag">Unity</span>
               <span class="tag">ML</span>
               <span class="tag">EfficientNetV2</span>
             </div>
-
             <ul>
               <li>
                 Developed a Unity-based data generator with 10,000+ scenes.
@@ -60,21 +74,17 @@
           <!-- Project 2 -->
           <div class="project-card">
             <h2>ZapMail: AI-Driven Email Automation Platform</h2>
-
             <div class="tags">
               <span class="tag">Ruby on Rails</span>
               <span class="tag">PostgreSQL</span>
               <span class="tag">Redis</span>
               <span class="tag">Sidekiq</span>
             </div>
-
             <ul>
-              <li>
-                Built a full-stack email automation platform with Ruby on Rails.
-              </li>
+              <li>Built a full-stack email automation platform with Rails.</li>
               <li>Integrated GPT-4o for dynamic content generation.</li>
               <li>
-                Implemented Sidekiq + Redis for large-scale async processing.
+                Implemented Sidekiq + Redis for scalable async processing.
               </li>
             </ul>
           </div>
@@ -82,14 +92,12 @@
           <!-- Project 3 -->
           <div class="project-card">
             <h2>Kuiz: Educational Video Platform</h2>
-
             <div class="tags">
               <span class="tag">Vue.js</span>
               <span class="tag">MariaDB</span>
               <span class="tag">FastAPI</span>
               <span class="tag">Collaborative Filtering</span>
             </div>
-
             <ul>
               <li>Designed a mobile-first swipe-based UI.</li>
               <li>
@@ -101,9 +109,6 @@
       </section>
     </main>
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
     <div id="footer"></div>
   </body>
 </html>

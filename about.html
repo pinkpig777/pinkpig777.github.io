@@ -1,15 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>About</title>
-    <div id="head-include"></div>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>About Charlie Chiu</title>
+
+    <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Learn more about Charlie Chiu, a software engineer specializing in AI, computer vision, backend development, and full-stack engineering."
+    />
+    <meta
+      name="keywords"
+      content="Charlie Chiu, About, Software Engineer, AI, Computer Vision, Backend, Full Stack"
+    />
+    <meta name="author" content="Charlie Chiu" />
+
+    <meta property="og:title" content="About – Charlie Chiu" />
+    <meta
+      property="og:description"
+      content="AI-driven software engineer specializing in computer vision and backend systems."
+    />
+    <meta
+      property="og:image"
+      content="https://charliechiu.github.io/assets/img/profile.jpg"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://charliechiu.github.io/about.html"
+    />
+
     <script>
-      fetch("partials/head.html")
-        .then((res) => res.text())
-        .then(
-          (data) => (document.getElementById("head-include").innerHTML = data)
-        );
       fetch("partials/header.html")
         .then((res) => res.text())
         .then((data) => (document.getElementById("header").innerHTML = data));
@@ -21,16 +46,9 @@
   </head>
 
   <body>
-    <!-- =========================
-         HEADER / NAVIGATION
-    ========================== -->
     <div id="header"></div>
 
-    <!-- =========================
-         MAIN CONTENT
-    ========================== -->
     <main>
-      <!-- ABOUT SECTION -->
       <section class="about">
         <h1>About Me</h1>
 
@@ -57,7 +75,6 @@
 
       <section class="skills">
         <h2>Technical Skills</h2>
-
         <ul>
           <li>
             <strong>Languages:</strong> Python, JavaScript, TypeScript, C, C++,
@@ -72,9 +89,6 @@
       </section>
     </main>
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
     <div id="footer"></div>
   </body>
 </html>
