@@ -4,7 +4,9 @@
 :root {
   /* Light Mode (Default) */
   --primary: #5e6677;
+  --primary-hover: #4a5262;
   --text: #1a1a1a;
+  --text-muted: #6b7280;
   --bg: #ffffff;
   --bg-card: #f3f4f6;
   --bg-nav: #f3f4f6;
@@ -32,19 +34,21 @@
 
 /* Dark Mode Overrides */
 html.dark {
-  --primary: #a0aec0;
-  --text: #f3f4f6;
-  --bg: #111827;
-  --bg-card: #1f2937;
-  --bg-nav: #1f2937;
-  --border: #374151;
-  --gray-light: #1f2937;
-  --gray-dark: #f3f4f6;
+  --primary: #38bdf8;
+  --primary-hover: #7dd3fc;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-nav: #1e293b;
+  --border: #334155;
+  --gray-light: #1e293b;
+  --gray-dark: #f1f5f9;
 }
 
 /* =========================================
    GLOBAL RESET + BASE
-========================================= */
+ ========================================= */
 html,
 body {
   margin: 0;
@@ -52,10 +56,11 @@ body {
   height: 100%;
   background: var(--bg);
   color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   font-size: var(--font-base);
   line-height: var(--line-normal);
 }
@@ -239,16 +244,18 @@ section {
 }
 
 .project-card {
-  background: var(--gray-light);
+  background: var(--bg-card);
   padding: var(--space-md);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: var(--primary);
 }
 
 .project-card h2 {
@@ -268,13 +275,22 @@ section {
 }
 
 .tag {
-  padding: 4px 10px;
-  background: var(--bg-card);
-  color: var(--text);
-  border: 1px solid var(--border);
+  padding: 4px 12px;
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(56, 189, 248, 0.2);
   border-radius: 999px;
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+html:not(.dark) .tag {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: #e2e8f0;
 }
 
 /* =========================================

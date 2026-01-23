@@ -1,29 +1,49 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function Home() {
-  return (
-    <section className="hero">
-      <div className="hero-text">
-        <h1>Howdy, I&apos;m Charlie.</h1>
+  const containerVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.2, staggerChildren: 0.1 }
+    }
+  };
 
-        <p>
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.2 } }
+  };
+
+  return (
+    <motion.section 
+      className="hero"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <div className="hero-text">
+        <motion.h1 variants={itemVariants}>Howdy, I&apos;m Charlie.</motion.h1>
+        <motion.p variants={itemVariants}>
           AI-driven software engineer specializing in computer vision, backend
           systems, and real-world engineering problems.
-        </p>
-
-        <p>
+        </motion.p>
+        <motion.p variants={itemVariants}>
           I build full-stack applications, intelligent tools, and modern
           engineering systems that solve actual problems.
-        </p>
+        </motion.p>
 
-        <Link className="cta-btn" to="/projects">
-          View My Projects
-        </Link>
+        <motion.div variants={itemVariants}>
+          <Link className="cta-btn" to="/projects">
+            View My Projects
+          </Link>
+        </motion.div>
       </div>
 
-      <div className="hero-image">
+      <motion.div className="hero-image" variants={itemVariants}>
         <img src="/assets/img/profile.jpg" alt="Charlie profile" />
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
