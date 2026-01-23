@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import ParticleNetwork from '../components/ParticleNetwork';
 
 export default function Home() {
   const containerVariants = {
@@ -17,12 +18,14 @@ export default function Home() {
   };
 
   return (
-    <motion.section 
-      className="hero"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
+    <>
+      <ParticleNetwork />
+      <motion.section 
+        className="hero"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
       <div className="hero-text">
         <motion.h1 variants={itemVariants}>Howdy, I&apos;m Charlie.</motion.h1>
         <motion.p variants={itemVariants}>
@@ -44,6 +47,7 @@ export default function Home() {
       <motion.div className="hero-image" variants={itemVariants}>
         <img src="/assets/img/profile.jpg" alt="Charlie profile" />
       </motion.div>
-    </motion.section>
+      </motion.section>
+    </>
   );
 }
