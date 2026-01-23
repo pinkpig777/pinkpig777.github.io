@@ -11,6 +11,10 @@
   --bg-card: #f3f4f6;
   --bg-nav: #f3f4f6;
   --border: #e5e7eb;
+  --particle-color: #0284c7;
+  --particle-line-color: #0ea5e9;
+  --particle-mouse-color: #111827;
+  --particle-bg: #ffffff;
 
   --gray-light: #f3f4f6;
   --gray-dark: #111827;
@@ -44,6 +48,10 @@ html.dark {
   --border: #334155;
   --gray-light: #1e293b;
   --gray-dark: #f1f5f9;
+  --particle-color: #67e8f9;
+  --particle-line-color: #22d3ee;
+  --particle-mouse-color: #e2e8f0;
+  --particle-bg: #0b1224;
 }
 
 /* =========================================
@@ -104,11 +112,17 @@ header,
 footer {
   padding: var(--space-md);
   background: var(--gray-light);
+  position: relative;
+  z-index: 1;
 }
 
 main {
   flex: 1;
   padding: var(--space-md);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 section {
@@ -203,6 +217,22 @@ section {
   justify-content: space-between;
   gap: var(--space-lg);
   margin-top: var(--space-xl);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-stage {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+.main--home {
+  padding: 0;
+}
+
+.main--home .hero-stage {
+  padding: var(--space-xl) var(--space-md);
 }
 
 .hero-text {
@@ -466,5 +496,9 @@ html:not(.dark) .tag {
 
   .hero-image img {
     max-width: 200px;
+  }
+
+  .main--home .hero-stage {
+    padding: var(--space-lg) var(--space-sm);
   }
 }

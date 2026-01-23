@@ -35,7 +35,6 @@ const skillGroups = [
     skills: [
       { name: 'FastAPI', icon: <SiFastapi color="#05998b" /> },
       { name: 'Rails', icon: <SiRubyonrails color="#cc0000" /> },
-      { name: 'Node.js', icon: <FaNodeJs color="#339933" /> },
     ]
   },
   {

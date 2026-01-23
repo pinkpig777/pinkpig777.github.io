@@ -19,35 +19,37 @@ export default function Home() {
 
   return (
     <>
-      <ParticleNetwork />
-      <motion.section 
-        className="hero"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-      <div className="hero-text">
-        <motion.h1 variants={itemVariants}>Howdy, I&apos;m Charlie.</motion.h1>
-        <motion.p variants={itemVariants}>
-          AI-driven software engineer specializing in computer vision, backend
-          systems, and real-world engineering problems.
-        </motion.p>
-        <motion.p variants={itemVariants}>
-          I build full-stack applications, intelligent tools, and modern
-          engineering systems that solve actual problems.
-        </motion.p>
+      <div className="hero-stage">
+        <ParticleNetwork />
+        <motion.section 
+          className="hero"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+        <div className="hero-text">
+          <motion.h1 variants={itemVariants}>Howdy, I&apos;m Charlie.</motion.h1>
+          <motion.p variants={itemVariants}>
+            AI-driven software engineer specializing in computer vision, backend
+            systems, and real-world engineering problems.
+          </motion.p>
+          <motion.p variants={itemVariants}>
+            I build full-stack applications, intelligent tools, and modern
+            engineering systems that solve actual problems.
+          </motion.p>
 
-        <motion.div variants={itemVariants}>
-          <Link className="cta-btn" to="/projects">
-            View My Projects
-          </Link>
+          <motion.div variants={itemVariants}>
+            <Link className="cta-btn" to="/projects">
+              View My Projects
+            </Link>
+          </motion.div>
+        </div>
+
+        <motion.div className="hero-image" data-particle-block variants={itemVariants}>
+          <img src="/assets/img/profile.jpg" alt="Charlie profile" />
         </motion.div>
+        </motion.section>
       </div>
-
-      <motion.div className="hero-image" variants={itemVariants}>
-        <img src="/assets/img/profile.jpg" alt="Charlie profile" />
-      </motion.div>
-      </motion.section>
     </>
   );
 }

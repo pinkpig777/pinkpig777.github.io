@@ -12,30 +12,64 @@ interface ParticleNetworkProps {
   maxDistance?: number;
   particleColor?: string;
   lineColor?: string;
+  mouseLineColor?: string;
+  backgroundColor?: string;
+  blockMouseSelector?: string;
 }
 
 export default function ParticleNetwork({
   particleCount = 80,
   maxDistance = 150,
-  particleColor = '#38bdf8',
-  lineColor = '#38bdf8',
+  particleColor,
+  lineColor,
+  mouseLineColor,
+  backgroundColor,
+  blockMouseSelector = '[data-particle-block]',
 }: ParticleNetworkProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: 0, y: 0, active: false });
   const animationFrameRef = useRef<number | undefined>(undefined);
+  const colorsRef = useRef({
+    particleColor: '#38bdf8',
+    lineColor: '#38bdf8',
+    mouseLineColor: '#ffffff',
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const container = canvas.parentElement ?? document.body;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const getThemeColor = (name: string, fallback: string) => {
+      const value = getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+        .trim();
+      return value || fallback;
+    };
+
+    const updateColors = () => {
+      const themeParticle = getThemeColor('--particle-color', '#38bdf8');
+      const themeLine = getThemeColor('--particle-line-color', themeParticle);
+      const themeMouse = getThemeColor('--particle-mouse-color', getThemeColor('--text', '#ffffff'));
+      colorsRef.current = {
+        particleColor: particleColor ?? themeParticle,
+        lineColor: lineColor ?? themeLine,
+        mouseLineColor: mouseLineColor ?? themeMouse,
+      };
+    };
+
+    updateColors();
+
     // Set canvas size
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     };
     resizeCanvas();
 
@@ -55,9 +89,15 @@ export default function ParticleNetwork({
 
     // Mouse event handlers
     const handleMouseMove = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      if (target && blockMouseSelector && target.closest(blockMouseSelector)) {
+        mouseRef.current.active = false;
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
       mouseRef.current = {
-        x: e.clientX,
-        y: e.clientY,
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
         active: true,
       };
     };
@@ -72,6 +112,7 @@ export default function ParticleNetwork({
 
       const particles = particlesRef.current;
       const mouse = mouseRef.current;
+      const { particleColor, lineColor, mouseLineColor } = colorsRef.current;
 
       // Update and draw particles
       particles.forEach((particle, i) => {
@@ -91,6 +132,7 @@ export default function ParticleNetwork({
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, 2, 0, Math.PI * 2);
         ctx.fillStyle = particleColor;
+        ctx.globalAlpha = 1;
         ctx.fill();
 
         // Draw connections to other particles
@@ -104,7 +146,8 @@ export default function ParticleNetwork({
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `${lineColor}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
+            ctx.strokeStyle = lineColor;
+            ctx.globalAlpha = opacity * 0.5;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -121,13 +164,15 @@ export default function ParticleNetwork({
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `${lineColor}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
+            ctx.strokeStyle = mouseLineColor;
+            ctx.globalAlpha = opacity;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
         }
       });
 
+      ctx.globalAlpha = 1;
       animationFrameRef.current = requestAnimationFrame(animate);
     };
 
@@ -135,32 +180,46 @@ export default function ParticleNetwork({
     animate();
 
     // Event listeners
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas();
+    });
+    resizeObserver.observe(container);
     window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
+    const themeObserver = new MutationObserver(() => {
+      updateColors();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class', 'style'],
+    });
 
     // Cleanup
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      resizeObserver.disconnect();
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+      themeObserver.disconnect();
     };
-  }, [particleCount, maxDistance, particleColor, lineColor]);
+  }, [particleCount, maxDistance, particleColor, lineColor, mouseLineColor, blockMouseSelector]);
 
   return (
     <canvas
       ref={canvasRef}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
         zIndex: -1,
-        background: '#0f172a',
+        pointerEvents: 'none',
+        background: backgroundColor ?? 'var(--particle-bg, var(--bg))',
       }}
     />
   );
