@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '../data/projects';
 import {
   FaPython,
@@ -61,11 +60,7 @@ export default function Projects() {
 
   return (
     <section className="projects-section">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+      <div>
         <h1>Personal Projects</h1>
         <p>Below are some of my selected projects.</p>
 
@@ -90,46 +85,39 @@ export default function Projects() {
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div layout className="projects">
-        <AnimatePresence>
-          {filteredProjects.map((project) => (
-            <motion.div
-              layout
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              key={project.id}
-              className="project-card"
-            >
-              <h2>
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: 'inherit', textDecoration: 'none' }}
-                >
-                  {project.title}
-                </a>
-              </h2>
-              <div className="tags">
-                {project.tags.map((tag) => (
-                  <span className="tag" key={tag} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {getIcon(tag)} {tag}
-                  </span>
-                ))}
-              </div>
-              <ul>
-                {project.description.map((desc, idx) => (
-                  <li key={idx} dangerouslySetInnerHTML={{ __html: desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <div className="projects">
+        {filteredProjects.map((project) => (
+          <div
+            key={project.id}
+            className="project-card"
+          >
+            <h2>
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                {project.title}
+              </a>
+            </h2>
+            <div className="tags">
+              {project.tags.map((tag) => (
+                <span className="tag" key={tag}>
+                  {getIcon(tag)} {tag}
+                </span>
+              ))}
+            </div>
+            <ul>
+              {project.description.map((desc, idx) => (
+                <li key={idx} dangerouslySetInnerHTML={{ __html: desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
