@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Charlie Chiu - Software Engineer</title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Portfolio of Charlie Chiu, a Software Engineer specializing in AI, Computer Vision, and full-stack development."
+    />
+    <meta
+      name="keywords"
+      content="Charlie Chiu, Software Engineer, AI, Computer Vision, Full Stack, Portfolio"
+    />
+    <meta name="author" content="Charlie Chiu" />
+
+    <meta property="og:title" content="Charlie Chiu - Software Engineer" />
+    <meta
+      property="og:description"
+      content="AI-driven software engineer specializing in computer vision and backend systems."
+    />
+    <meta
+      property="og:image"
+      content="https://charliechiu.github.io/assets/img/profile.jpg"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://charliechiu.github.io/" />
+
+    <link rel="icon" type="image/png" href="/assets/img/logo.png" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script>
+      fetch("partials/header.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("header").innerHTML = data));
+
+      fetch("partials/footer.html")
+        .then((res) => res.text())
+        .then((data) => (document.getElementById("footer").innerHTML = data));
+    </script>
+  </head>
+
+  <body>
+    <!-- =========================
+         HEADER / NAVIGATION
+    ========================== -->
+    <div id="header"></div>
+
+    <!-- =========================
+         HERO SECTION
+    ========================== -->
+    <main>
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Howdy, I'm Charlie.</h1>
+
+          <p>
+            AI-driven software engineer specializing in computer vision, backend
+            systems, and real-world engineering problems.
+          </p>
+
+          <p>
+            I build full-stack applications, intelligent tools, and modern
+            engineering systems that solve actual problems.
+          </p>
+
+          <a class="cta-btn" href="projects.html">View My Projects</a>
+        </div>
+
+        <div class="hero-image">
+          <img src="/assets/img/profile.jpg" alt="Charlie profile" />
+        </div>
+      </section>
+    </main>
+
+    <!-- =========================
+         MODERN FOOTER
+    ========================== -->
+    <div id="footer"></div>
+  </body>
+</html>
