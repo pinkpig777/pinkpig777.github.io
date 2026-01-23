@@ -1,162 +1,135 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { projects } from '../data/projects';
+import {
+  FaPython,
+  FaReact,
+  FaVuejs,
+  FaTasks,
+  FaBrain,
+  FaRobot,
+  FaDatabase,
+} from 'react-icons/fa';
+import {
+  SiPytorch,
+  SiHuggingface,
+  SiSocketdotio,
+  SiJavascript,
+  SiRubyonrails,
+  SiPostgresql,
+  SiRedis,
+  SiHeroku,
+  SiFastapi,
+  SiSqlite,
+  SiTypescript,
+  SiFirebase,
+} from 'react-icons/si';
+
+const getIcon = (tag: string) => {
+  const normalize = tag.toLowerCase();
+  if (normalize.includes('python')) return <FaPython />;
+  if (normalize.includes('react')) return <FaReact />;
+  if (normalize.includes('vue')) return <FaVuejs />;
+  if (normalize.includes('pytorch')) return <SiPytorch />;
+  if (normalize.includes('transformers')) return <SiHuggingface />;
+  if (normalize.includes('socket')) return <SiSocketdotio />;
+  if (normalize.includes('javascript')) return <SiJavascript />;
+  if (normalize.includes('ruby')) return <SiRubyonrails />;
+  if (normalize.includes('postgres')) return <SiPostgresql />;
+  if (normalize.includes('redis')) return <SiRedis />;
+  if (normalize.includes('heroku')) return <SiHeroku />;
+  if (normalize.includes('fastapi')) return <SiFastapi />;
+  if (normalize.includes('sqlite')) return <SiSqlite />;
+  if (normalize.includes('typescript')) return <SiTypescript />;
+  if (normalize.includes('firebase')) return <SiFirebase />;
+  if (normalize.includes('rag')) return <FaBrain />;
+  if (normalize.includes('agent')) return <FaRobot />;
+  if (normalize.includes('database') || normalize.includes('chroma'))
+    return <FaDatabase />;
+  return <FaTasks />;
+};
+
+const categories = ['All', 'AI/ML', 'Full Stack', 'Other'];
+
 export default function Projects() {
+  const [filter, setFilter] = useState('All');
+
+  const filteredProjects =
+    filter === 'All'
+      ? projects
+      : projects.filter((p) => p.category === filter);
+
   return (
     <section className="projects-section">
-      <h1>Personal Projects</h1>
-      <p>Below are some of my selected projects.</p>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1>Personal Projects</h1>
+        <p>Below are some of my selected projects.</p>
 
-      <div className="projects">
-        {/* Project 1 */}
-        <div className="project-card">
-          <h2>
-            <a
-              href="https://github.com/pinkpig777/Chatroom_Monitor_based_on_Sentiment_Analysis"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'inherit', textDecoration: 'none' }}
+        {/* Filter Bar */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                border: 'none',
+                cursor: 'pointer',
+                background: filter === cat ? 'var(--primary)' : 'var(--bg-card)',
+                color: filter === cat ? '#fff' : 'var(--text)',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+              }}
             >
-              Sentiment Aware Chatroom Monitor
-            </a>
-          </h2>
-          <div className="tags">
-            <span className="tag">PyTorch</span>
-            <span className="tag">Transformers</span>
-            <span className="tag">Socket.IO</span>
-            <span className="tag">JavaScript</span>
-          </div>
-          <ul>
-            <li>
-              Designed and built a real-time system to detect toxic messages using
-              sentiment analysis, leading a team of 4 engineers.
-            </li>
-            <li>
-              Fine-tuned a pre-trained Chinese BERT model on a custom dataset of
-              chat logs, achieving <strong>87% accuracy</strong> and increasing
-              toxic message classification AUC by <strong>36%</strong>.
-            </li>
-            <li>
-              Engineered a full-stack solution with a Python backend and
-              WebSocket-based frontend alerts, enabling users to take immediate
-              action on flagged content.
-            </li>
-          </ul>
+              {cat}
+            </button>
+          ))}
         </div>
+      </motion.div>
 
-        {/* Project 2 */}
-        <div className="project-card">
-          <h2>
-            <a
-              href="https://github.com/TAMUCSCE-606-Zapmail/ZapMail"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'inherit', textDecoration: 'none' }}
+      <motion.div layout className="projects">
+        <AnimatePresence>
+          {filteredProjects.map((project) => (
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              key={project.id}
+              className="project-card"
             >
-              ZapMail: AI-Driven Email Automation Platform
-            </a>
-          </h2>
-          <div className="tags">
-            <span className="tag">Ruby on Rails</span>
-            <span className="tag">PostgreSQL</span>
-            <span className="tag">Redis</span>
-            <span className="tag">Sidekiq</span>
-            <span className="tag">Heroku</span>
-          </div>
-          <ul>
-            <li>
-              Architected an email automation platform in Ruby on Rails,
-              integrating GPT-4o to generate personalized content.
-            </li>
-            <li>
-              Engineered a scalable background processing system using Sidekiq and
-              Redis to manage high-volume async delivery.
-            </li>
-            <li>
-              Spearheaded the adoption of TDD/BDD principles across a 4-developer
-              team, enforcing comprehensive RSpec/Cucumber test coverage to
-              prevent regression in critical workflows.
-            </li>
-          </ul>
-        </div>
-
-        {/* Project 3 */}
-        <div className="project-card">
-          <h2>
-            <a
-              href="https://github.com/pinkpig777/agentic-resume-tailor"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'inherit', textDecoration: 'none' }}
-            >
-              ART - Agentic Resume Tailor
-            </a>
-          </h2>
-          <div className="tags">
-            <span className="tag">React</span>
-            <span className="tag">Python</span>
-            <span className="tag">FastAPI</span>
-            <span className="tag">RAG</span>
-            <span className="tag">AI Agents</span>
-            <span className="tag">SQLite</span>
-            <span className="tag">ChromaDB</span>
-          </div>
-          <ul>
-            <li>
-              Built a local-first tailoring system using React and FastAPI,
-              utilizing SQLite for data persistence and ChromaDB for vector
-              retrieval to generate single-page PDF/TeX artifacts.
-            </li>
-            <li>
-              Designed a multi-agent loop (Query → Retrieve → Rewrite → Score)
-              with iterative boost terms, optimizing content coverage against Job
-              Description requirements.
-            </li>
-            <li>
-              Implemented rewrite safety guardrails to prevent hallucinations
-              (semantic-drift checks, fact-freezing), ensuring{' '}
-              <strong>100% adherence</strong> to original resume facts while
-              adapting tone.
-            </li>
-          </ul>
-        </div>
-
-        {/* Project 4 */}
-        <div className="project-card">
-          <h2>
-            <a
-              href="https://www.canva.com/design/DAFx6W80Bf8/ov6qqNMvedXMctArLpB1Mg/edit?utm_content=DAFx6W80Bf8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'inherit', textDecoration: 'none' }}
-            >
-              Kuiz - Educational Video Platform
-            </a>
-          </h2>
-          <div className="tags">
-            <span className="tag">Vue.js</span>
-            <span className="tag">TypeScript</span>
-            <span className="tag">Python</span>
-            <span className="tag">FastAPI</span>
-            <span className="tag">Firebase</span>
-          </div>
-          <ul>
-            <li>
-              Led a 5-member team to win 1st Prize at Meichu Hackathon by
-              developing a TikTok-inspired educational platform.
-            </li>
-            <li>
-              Built a mobile-first frontend with swipe navigation and VOD playback
-              optimized for learning.
-            </li>
-            <li>
-              Developed a FastAPI backend with authentication, video tagging, and
-              playlist endpoints deployed to Firebase.
-            </li>
-            <li>
-              Improved user engagement by implementing a neural collaborative
-              filtering recommendation engine.
-            </li>
-          </ul>
-        </div>
-      </div>
+              <h2>
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
+                  {project.title}
+                </a>
+              </h2>
+              <div className="tags">
+                {project.tags.map((tag) => (
+                  <span className="tag" key={tag} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {getIcon(tag)} {tag}
+                  </span>
+                ))}
+              </div>
+              <ul>
+                {project.description.map((desc, idx) => (
+                  <li key={idx} dangerouslySetInnerHTML={{ __html: desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
     </section>
   );
 }

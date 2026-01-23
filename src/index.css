@@ -2,9 +2,13 @@
    ROOT VARIABLES
 ========================================= */
 :root {
+  /* Light Mode (Default) */
   --primary: #5e6677;
   --text: #1a1a1a;
   --bg: #ffffff;
+  --bg-card: #f3f4f6;
+  --bg-nav: #f3f4f6;
+  --border: #e5e7eb;
 
   --gray-light: #f3f4f6;
   --gray-dark: #111827;
@@ -24,6 +28,18 @@
 
   --line-tight: 1.2;
   --line-normal: 1.6;
+}
+
+/* Dark Mode Overrides */
+html.dark {
+  --primary: #a0aec0;
+  --text: #f3f4f6;
+  --bg: #111827;
+  --bg-card: #1f2937;
+  --bg-nav: #1f2937;
+  --border: #374151;
+  --gray-light: #1f2937;
+  --gray-dark: #f3f4f6;
 }
 
 /* =========================================
@@ -97,12 +113,16 @@ section {
 /* =========================================
    NAVIGATION
 ========================================= */
-nav a {
+/* =========================================
+   NAVIGATION
+========================================= */
+.desktop-nav a {
   margin-right: var(--space-sm);
   position: relative;
+  font-weight: 500;
 }
 
-nav a::after {
+.desktop-nav a::after {
   content: "";
   width: 0;
   height: 2px;
@@ -113,8 +133,55 @@ nav a::after {
   transition: width 0.2s ease;
 }
 
-nav a:hover::after {
+.desktop-nav a:hover::after {
   width: 100%;
+}
+
+/* Mobile Nav Styles */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: 'pointer';
+  color: var(--text);
+  font-size: 1.5rem;
+  padding: 8px;
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-sd);
+  padding-top: var(--space-sm);
+  background: var(--bg-card);
+  border-radius: 8px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.mobile-nav a {
+  padding: 12px;
+  display: block;
+  border-radius: 4px;
+}
+
+.mobile-nav a:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: flex;
+  }
 }
 
 /* =========================================
