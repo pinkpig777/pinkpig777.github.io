@@ -44,10 +44,11 @@ export default function Resume() {
             borderRadius: '6px',
             border: 'none',
             cursor: 'pointer',
-            backgroundColor: role === 'SWE' ? '#5e6677' : '#e5e7eb',
-            color: role === 'SWE' ? 'white' : '#333',
+            backgroundColor: role === 'SWE' ? 'var(--primary)' : 'var(--bg-card)',
+            color: role === 'SWE' ? 'white' : 'var(--text)',
             fontSize: '1rem',
-            fontWeight: 500
+            fontWeight: 500,
+            transition: 'background-color 0.2s ease'
           }}
         >
           Software Engineer
@@ -59,10 +60,11 @@ export default function Resume() {
             borderRadius: '6px',
             border: 'none',
             cursor: 'pointer',
-            backgroundColor: role === 'MLE' ? '#5e6677' : '#e5e7eb',
-            color: role === 'MLE' ? 'white' : '#333',
+            backgroundColor: role === 'MLE' ? 'var(--primary)' : 'var(--bg-card)',
+            color: role === 'MLE' ? 'white' : 'var(--text)',
             fontSize: '1rem',
-            fontWeight: 500
+            fontWeight: 500,
+            transition: 'background-color 0.2s ease'
           }}
         >
           Machine Learning Engineer
@@ -77,10 +79,10 @@ export default function Resume() {
           title={`Charlie Chiu ${role} Resume`}
         />
       ) : (
-        <div style={{ padding: '2rem', background: '#f3f4f6', borderRadius: '8px' }}>
+        <div style={{ padding: '2rem', background: 'var(--bg-card)', borderRadius: '8px', border: '1px solid var(--border)' }}>
           <p>
             No {role} resume found. Please add a PDF to{' '}
-            <code>src/assets/resume/{role.toLowerCase()}/</code>.
+            <code style={{ background: 'var(--bg)', padding: '2px 4px', borderRadius: '4px' }}>src/assets/resume/{role.toLowerCase()}/</code>.
           </p>
         </div>
       )}
