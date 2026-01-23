@@ -138,8 +138,13 @@ section {
   transition: width 0.2s ease;
 }
 
-.desktop-nav a:hover::after {
+.desktop-nav a:hover::after,
+.desktop-nav a.active::after {
   width: 100%;
+}
+
+.desktop-nav a.active {
+  color: var(--primary);
 }
 
 /* Mobile Nav Styles */

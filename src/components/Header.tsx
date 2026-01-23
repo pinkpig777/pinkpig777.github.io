@@ -20,11 +20,11 @@ export default function Header() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         {/* Desktop Nav */}
         <nav className="desktop-nav">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/projects">Projects</Link>
-          <Link to="/resume">Resume</Link>
-          <Link to="/contact">Contact</Link>
+          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link>
+          <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</Link>
+          <Link to="/projects" className={location.pathname === '/projects' ? 'active' : ''}>Projects</Link>
+          <Link to="/resume" className={location.pathname === '/resume' ? 'active' : ''}>Resume</Link>
+          <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link>
         </nav>
 
         {/* Mobile Hamburger (Visible only on mobile via CSS) */}
