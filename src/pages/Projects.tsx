@@ -62,9 +62,9 @@ export default function Projects() {
   return (
     <section className="projects-section">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.2 }}
       >
         <h1>Personal Projects</h1>
         <p>Below are some of my selected projects.</p>
@@ -83,7 +83,7 @@ export default function Projects() {
                 background: filter === cat ? 'var(--primary)' : 'var(--bg-card)',
                 color: filter === cat ? '#fff' : 'var(--text)',
                 fontWeight: 500,
-                transition: 'all 0.3s ease',
+                transition: 'all 0.2s ease',
               }}
             >
               {cat}
@@ -93,14 +93,14 @@ export default function Projects() {
       </motion.div>
 
       <motion.div layout className="projects">
-        <AnimatePresence>
+        <AnimatePresence mode='popLayout'>
           {filteredProjects.map((project) => (
             <motion.div
               layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
               key={project.id}
               className="project-card"
             >

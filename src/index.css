@@ -269,8 +269,9 @@ section {
 
 .tag {
   padding: 4px 10px;
-  background: #e5e7eb;
-  color: var(--gray-dark);
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 500;
@@ -355,7 +356,7 @@ section {
    CLEAN FOOTER
 ========================================= */
 .footer-clean {
-  background: #f5f6f8;
+  background: var(--bg-card);
   padding: var(--space-xl) var(--space-md);
   width: 100%;
 }
