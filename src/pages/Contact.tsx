@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { motion } from 'framer-motion';
 import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
 
 export default function Contact() {
@@ -14,16 +15,34 @@ export default function Contact() {
     window.location.href = `mailto:charly729.chiu@gmail.com?subject=Contact from ${formData.name}&body=${formData.message}`;
   };
 
-  return (
-    <section className="contact-section">
-      <h1>Get in Touch</h1>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
 
-      <p className="contact-subtext">
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+  };
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <section className="contact-section">
+        <motion.h1 variants={itemVariants}>Get in Touch</motion.h1>
+
+        <motion.p variants={itemVariants} className="contact-subtext">
         Whether it&apos;s about opportunities, collaboration, or just a
         conversation, feel free to reach out.
-      </p>
+        </motion.p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '2rem' }}>
+        <motion.div variants={itemVariants} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '2rem' }}>
         {/* Contact Info Card */}
         <div className="contact-card" style={{ height: 'fit-content' }}>
           <h3>Connect with me</h3>
@@ -84,7 +103,8 @@ export default function Contact() {
             </button>
           </form>
         </div>
-      </div>
-    </section>
+        </motion.div>
+      </section>
+    </motion.div>
   );
 }

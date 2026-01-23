@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
 import {
   FaPython,
@@ -58,14 +59,31 @@ export default function Projects() {
       ? projects
       : projects.filter((p) => p.category === filter);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+  };
+
   return (
-    <section className="projects-section">
-      <div>
-        <h1>Personal Projects</h1>
-        <p>Below are some of my selected projects.</p>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <section className="projects-section">
+        <motion.h1 variants={itemVariants}>Personal Projects</motion.h1>
+        <motion.p variants={itemVariants}>Below are some of my selected projects.</motion.p>
 
         {/* Filter Bar */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem', flexWrap: 'wrap' }}>
+        <motion.div variants={itemVariants} style={{ display: 'flex', gap: '10px', marginBottom: '2rem', flexWrap: 'wrap' }}>
           {categories.map((cat) => (
             <button
               key={cat}
@@ -84,10 +102,9 @@ export default function Projects() {
               {cat}
             </button>
           ))}
-        </div>
-      </div>
+        </motion.div>
 
-      <div className="projects">
+        <motion.div variants={itemVariants} className="projects">
         {filteredProjects.map((project) => (
           <div
             key={project.id}
@@ -117,7 +134,8 @@ export default function Projects() {
             </ul>
           </div>
         ))}
-      </div>
-    </section>
+        </motion.div>
+      </section>
+    </motion.div>
   );
 }
