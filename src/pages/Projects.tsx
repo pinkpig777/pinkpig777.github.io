@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { projects } from '../data/projects';
+import projectsData from '../assets/projects.json';
 import {
   FaPython,
   FaReact,
@@ -50,6 +50,17 @@ const getIcon = (tag: string) => {
 };
 
 const categories = ['All', 'AI/ML', 'Full Stack', 'Other'];
+
+type Project = {
+  id: string;
+  title: string;
+  description: string[];
+  tags: string[];
+  link?: string;
+  category: 'AI/ML' | 'Full Stack' | 'Mobile' | 'Other';
+};
+
+const projects = projectsData as Project[];
 
 export default function Projects() {
   const [filter, setFilter] = useState('All');

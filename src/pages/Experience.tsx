@@ -6,7 +6,7 @@ import {
   FaGraduationCap,
   FaMapMarkerAlt,
 } from 'react-icons/fa';
-import resumeData from '../assets/resume/data.json';
+import experienceData from '../assets/experience/data.json';
 
 type EducationEntry = {
   institution: string;
@@ -24,7 +24,7 @@ type WorkEntry = {
   highlights?: string[];
 };
 
-type ResumeData = {
+type ExperienceData = {
   education: EducationEntry[];
   work_experience: WorkEntry[];
   projects?: {
@@ -44,7 +44,7 @@ type TimelineItem = {
   sortDate: number;
 };
 
-const data = resumeData as ResumeData;
+const data = experienceData as ExperienceData;
 
 const MONTH_INDEX: Record<string, number> = {
   Jan: 0,
@@ -78,9 +78,10 @@ const formatRange = (range: string) => {
   return { start, end: end ?? '' };
 };
 
-export default function Resume() {
+export default function Experience() {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [expandAll, setExpandAll] = useState(false);
+  const [viewFilter, setViewFilter] = useState<'all' | 'work' | 'education'>('all');
 
   const educationItems: TimelineItem[] = data.education.map((entry) => ({
     type: 'education',
@@ -105,6 +106,10 @@ export default function Resume() {
   const timelineItems = [...educationItems, ...workItems].sort(
     (a, b) => b.sortDate - a.sortDate,
   );
+  const filteredTimelineItems =
+    viewFilter === 'all'
+      ? timelineItems
+      : timelineItems.filter((item) => item.type === viewFilter);
 
   const toggleItem = (key: string) => {
     setExpandedItems((prev) => ({
@@ -114,70 +119,98 @@ export default function Resume() {
   };
 
   return (
-    <section className="resume-section">
-      <h1>My Resume</h1>
-      <p className="resume-subtext">
+    <section className="experience-section">
+      <h1>My Experience</h1>
+      <p className="experience-subtext">
         Timeline of education and work experience.
       </p>
 
-      <div className="resume-stats">
-        <div className="resume-stat resume-stat--work">
-          <div className="resume-stat-icon">
+      <div className="experience-stats">
+        <div className="experience-stat experience-stat--work">
+          <div className="experience-stat-icon">
             <FaBriefcase />
           </div>
           <div>
-            <div className="resume-stat-value">{data.work_experience.length}</div>
-            <div className="resume-stat-label">Positions Held</div>
+            <div className="experience-stat-value">{data.work_experience.length}</div>
+            <div className="experience-stat-label">Positions Held</div>
           </div>
         </div>
-        <div className="resume-stat resume-stat--edu">
-          <div className="resume-stat-icon">
+        <div className="experience-stat experience-stat--edu">
+          <div className="experience-stat-icon">
             <FaGraduationCap />
           </div>
           <div>
-            <div className="resume-stat-value">{data.education.length}</div>
-            <div className="resume-stat-label">Degrees</div>
+            <div className="experience-stat-value">{data.education.length}</div>
+            <div className="experience-stat-label">Degrees</div>
           </div>
         </div>
       </div>
 
-      <div className="resume-controls">
+      <div className="experience-controls">
+        <div className="experience-filter" role="tablist" aria-label="Experience filter">
+          <button
+            type="button"
+            className={`experience-filter-btn ${viewFilter === 'all' ? 'is-active' : ''}`}
+            data-filter="all"
+            onClick={() => setViewFilter('all')}
+          >
+            All
+          </button>
+          <button
+            type="button"
+            className={`experience-filter-btn ${viewFilter === 'work' ? 'is-active' : ''}`}
+            data-filter="work"
+            onClick={() => setViewFilter('work')}
+          >
+            <FaBriefcase />
+            Work
+          </button>
+          <button
+            type="button"
+            className={`experience-filter-btn ${viewFilter === 'education' ? 'is-active' : ''}`}
+            data-filter="education"
+            onClick={() => setViewFilter('education')}
+          >
+            <FaGraduationCap />
+            Edu
+          </button>
+        </div>
         <button
           type="button"
-          className="resume-toggle-all"
+          className="experience-toggle-all"
           onClick={() => setExpandAll((prev) => !prev)}
         >
           {expandAll ? 'Collapse all details' : 'Expand all details'}
         </button>
       </div>
 
-      <div className="resume-timeline">
-        {timelineItems.map((item, index) => {
+      <div className="experience-timeline">
+        {filteredTimelineItems.map((item, index) => {
           const range = formatRange(item.date);
           const itemKey = `${item.type}-${item.org}-${item.title}-${index}`;
           const isExpanded = expandAll || Boolean(expandedItems[itemKey]);
           return (
             <article
               key={`${item.type}-${item.org}-${index}`}
-              className={`resume-item resume-item--${item.type}`}
+              className={`experience-item experience-item--${item.type}`}
             >
-              <div className="resume-time">
-                <span className="resume-time-start">{range.start}</span>
-                <span className="resume-time-end">{range.end}</span>
+              <div className="experience-time">
+                <span className="experience-time-start">{range.start}</span>
+                <span className="experience-time-end">{range.end}</span>
               </div>
-              <div className="resume-node">
-                <span className="resume-dot" />
+              <div className="experience-node">
+                <span className="experience-dot" />
               </div>
-              <div className="resume-card">
-                <div className="resume-card-header">
-                  <div className="resume-card-heading">
-                    <div className="resume-card-icon">
+              <div className="experience-card">
+                <div className="experience-card-header">
+                  <div className="experience-card-heading">
+                    <div className="experience-card-icon">
                       {item.type === 'education' ? <FaGraduationCap /> : <FaBriefcase />}
                     </div>
                     <div>
-                      <h3 className="resume-card-title">{item.title}</h3>
-                      <p className="resume-card-org">{item.org}</p>
-                      <p className="resume-card-location">
+                      <h3 className="experience-card-title">{item.title}</h3>
+                      <p className="experience-card-org">{item.org}</p>
+                      <p className="experience-card-location">
                         <FaMapMarkerAlt />
                         <span>{item.location}</span>
                       </p>
@@ -186,7 +219,7 @@ export default function Resume() {
                   {item.details.length > 0 && (
                     <button
                       type="button"
-                      className="resume-toggle"
+                      className="experience-toggle"
                       onClick={() => toggleItem(itemKey)}
                       aria-expanded={isExpanded}
                       aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
@@ -196,7 +229,7 @@ export default function Resume() {
                   )}
                 </div>
                 {item.details.length > 0 && isExpanded && (
-                  <ul className="resume-card-list">
+                  <ul className="experience-card-list">
                     {item.details.map((detail, detailIndex) => (
                       <li key={`${item.org}-${detailIndex}`}>{detail}</li>
                     ))}

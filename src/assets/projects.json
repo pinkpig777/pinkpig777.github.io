@@ -1,0 +1,51 @@
+[
+  {
+    "id": "sentiment-monitor",
+    "title": "Sentiment Aware Chatroom Monitor",
+    "tags": ["PyTorch", "Transformers", "Socket.IO", "JavaScript"],
+    "category": "AI/ML",
+    "link": "https://github.com/pinkpig777/Chatroom_Monitor_based_on_Sentiment_Analysis",
+    "description": [
+      "Designed and built a real-time system to detect toxic messages using sentiment analysis, leading a team of 4 engineers.",
+      "Fine-tuned a pre-trained Chinese BERT model on a custom dataset of chat logs, achieving 87% accuracy and increasing toxic message classification AUC by 36%.",
+      "Engineered a full-stack solution with a Python backend and WebSocket-based frontend alerts, enabling users to take immediate action on flagged content."
+    ]
+  },
+  {
+    "id": "zapmail",
+    "title": "ZapMail: AI-Driven Email Automation Platform",
+    "tags": ["Ruby on Rails", "PostgreSQL", "Redis", "Sidekiq", "Heroku"],
+    "category": "Full Stack",
+    "link": "https://github.com/TAMUCSCE-606-Zapmail/ZapMail",
+    "description": [
+      "Architected an email automation platform in Ruby on Rails, integrating GPT-4o to generate personalized content.",
+      "Engineered a scalable background processing system using Sidekiq and Redis to manage high-volume async delivery.",
+      "Spearheaded the adoption of TDD/BDD principles across a 4-developer team, enforcing comprehensive RSpec/Cucumber test coverage to prevent regression in critical workflows."
+    ]
+  },
+  {
+    "id": "art",
+    "title": "ART - Agentic Resume Tailor",
+    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
+    "category": "AI/ML",
+    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
+    "description": [
+      "Built a local-first tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
+      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
+      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
+    ]
+  },
+  {
+    "id": "kuiz",
+    "title": "Kuiz - Educational Video Platform",
+    "tags": ["Vue.js", "TypeScript", "Python", "FastAPI", "Firebase"],
+    "category": "Full Stack",
+    "link": "https://www.canva.com/design/DAFx6W80Bf8/ov6qqNMvedXMctArLpB1Mg/edit?utm_content=DAFx6W80Bf8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
+    "description": [
+      "Led a 5-member team to win 1st Prize at Meichu Hackathon by developing a TikTok-inspired educational platform.",
+      "Built a mobile-first frontend with swipe navigation and VOD playback optimized for learning.",
+      "Developed a FastAPI backend with authentication, video tagging, and playlist endpoints deployed to Firebase.",
+      "Improved user engagement by implementing a neural collaborative filtering recommendation engine."
+    ]
+  }
+]

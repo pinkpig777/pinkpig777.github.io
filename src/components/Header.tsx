@@ -23,7 +23,7 @@ export default function Header() {
           <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link>
           <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</Link>
           <Link to="/projects" className={location.pathname === '/projects' ? 'active' : ''}>Projects</Link>
-          <Link to="/resume" className={location.pathname === '/resume' ? 'active' : ''}>Resume</Link>
+          <Link to="/experience" className={location.pathname === '/experience' ? 'active' : ''}>Experience</Link>
           <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link>
         </nav>
 
@@ -68,7 +68,7 @@ export default function Header() {
             <Link to="/">Home</Link>
             <Link to="/about">About</Link>
             <Link to="/projects">Projects</Link>
-            <Link to="/resume">Resume</Link>
+            <Link to="/experience">Experience</Link>
             <Link to="/contact">Contact</Link>
           </motion.nav>
         )}
