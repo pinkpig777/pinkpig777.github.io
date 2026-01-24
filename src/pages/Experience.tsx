@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   FaBriefcase,
   FaChevronDown,
@@ -83,6 +84,19 @@ export default function Experience() {
   const [expandAll, setExpandAll] = useState(false);
   const [viewFilter, setViewFilter] = useState<'all' | 'work' | 'education'>('all');
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.25 } },
+  };
+
   const educationItems: TimelineItem[] = data.education.map((entry) => ({
     type: 'education',
     title: entry.degree,
@@ -119,13 +133,18 @@ export default function Experience() {
   };
 
   return (
-    <section className="experience-section">
-      <h1>My Experience</h1>
-      <p className="experience-subtext">
+    <motion.section
+      className="experience-section"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.h1 variants={itemVariants}>My Experience</motion.h1>
+      <motion.p className="experience-subtext" variants={itemVariants}>
         Timeline of education and work experience.
-      </p>
+      </motion.p>
 
-      <div className="experience-stats">
+      <motion.div className="experience-stats" variants={itemVariants}>
         <div className="experience-stat experience-stat--work">
           <div className="experience-stat-icon">
             <FaBriefcase />
@@ -144,9 +163,9 @@ export default function Experience() {
             <div className="experience-stat-label">Degrees</div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="experience-controls">
+      <motion.div className="experience-controls" variants={itemVariants}>
         <div className="experience-filter" role="tablist" aria-label="Experience filter">
           <button
             type="button"
@@ -182,17 +201,18 @@ export default function Experience() {
         >
           {expandAll ? 'Collapse all details' : 'Expand all details'}
         </button>
-      </div>
+      </motion.div>
 
-      <div className="experience-timeline">
+      <motion.div className="experience-timeline" variants={itemVariants}>
         {filteredTimelineItems.map((item, index) => {
           const range = formatRange(item.date);
           const itemKey = `${item.type}-${item.org}-${item.title}-${index}`;
           const isExpanded = expandAll || Boolean(expandedItems[itemKey]);
           return (
-            <article
+            <motion.article
               key={`${item.type}-${item.org}-${index}`}
               className={`experience-item experience-item--${item.type}`}
+              variants={itemVariants}
             >
               <div className="experience-time">
                 <span className="experience-time-start">{range.start}</span>
@@ -236,10 +256,10 @@ export default function Experience() {
                   </ul>
                 )}
               </div>
-            </article>
+            </motion.article>
           );
         })}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
