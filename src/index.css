@@ -93,6 +93,10 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -130,6 +134,8 @@ footer {
   background: var(--gray-light);
   position: relative;
   z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 main {
@@ -784,13 +790,22 @@ html:not(.dark) .tag {
 ========================================= */
 @media (max-width: 768px) {
   body {
-    padding: 0 var(--space-sm);
+    padding: 0;
   }
 
   nav {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-xs);
+  }
+
+  header,
+  footer {
+    padding: var(--space-sm);
+  }
+
+  main {
+    padding: var(--space-sm);
   }
 
   h1 {
@@ -804,6 +819,8 @@ html:not(.dark) .tag {
   .hero {
     flex-direction: column;
     text-align: center;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
   }
 
   .hero-image img {
@@ -811,6 +828,65 @@ html:not(.dark) .tag {
   }
 
   .main--home .hero-stage {
-    padding: var(--space-lg) var(--space-sm);
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .cta-btn {
+    margin-top: var(--space-sm);
+  }
+
+  section {
+    margin-bottom: var(--space-lg);
+  }
+
+  .projects {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card {
+    padding: var(--space-sm);
+  }
+
+  .project-card ul {
+    padding-left: 18px;
+  }
+
+  .tags {
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+
+  .experience-stat {
+    padding: var(--space-sm);
+  }
+
+  .experience-card {
+    padding: var(--space-sm);
+  }
+
+  .experience-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .experience-toggle {
+    align-self: flex-end;
+  }
+
+  .contact-card {
+    padding: var(--space-md);
+  }
+
+  .contact-item {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer-clean {
+    padding: var(--space-md) var(--space-sm);
   }
 }
