@@ -1,5 +1,17 @@
 [
   {
+    "id": "art",
+    "title": "ART - Agentic Resume Tailor",
+    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
+    "category": "AI/ML",
+    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
+    "description": [
+      "Built a local-first tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
+      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
+      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
+    ]
+  },
+  {
     "id": "sentiment-monitor",
     "title": "Sentiment Aware Chatroom Monitor",
     "tags": ["PyTorch", "Transformers", "Socket.IO", "JavaScript"],
@@ -24,18 +36,6 @@
     ]
   },
   {
-    "id": "art",
-    "title": "ART - Agentic Resume Tailor",
-    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
-    "category": "AI/ML",
-    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
-    "description": [
-      "Built a local-first tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
-      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
-      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
-    ]
-  },
-  {
     "id": "kuiz",
     "title": "Kuiz - Educational Video Platform",
     "tags": ["Vue.js", "TypeScript", "Python", "FastAPI", "Firebase"],
@@ -46,6 +46,26 @@
       "Built a mobile-first frontend with swipe navigation and VOD playback optimized for learning.",
       "Developed a FastAPI backend with authentication, video tagging, and playlist endpoints deployed to Firebase.",
       "Improved user engagement by implementing a neural collaborative filtering recommendation engine."
+    ]
+  },
+  {
+    "id": "stock-tracker",
+    "title": "Stock-Tracker: Asset Dashboard",
+    "tags": [
+      "React",
+      "Tailwind CSS",
+      "Recharts",
+      "Supabase",
+      "Postgres",
+      "Finnhub API"
+    ],
+    "category": "Other",
+    "link": "https://stock-tracker-kappa-ten.vercel.app/",
+    "description": [
+      "Built “Asset Dashboard,” a secure, real-time portfolio tracker with Supabase magic-link auth and live Finnhub market data.",
+      "Designed an asset allocation view with interactive pie chart, smart color system, and responsive legend for clear holdings breakdown.",
+      "Added portfolio insights (net worth, cash/buying power, daily value) plus symbol validation to prevent bad data.",
+      "Implemented JSON import/export for backup or migration, optimized for desktop and mobile UX."
     ]
   }
 ]
