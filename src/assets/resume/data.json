@@ -1,0 +1,105 @@
+{
+  "education": [
+    {
+      "institution": "Texas A&M University",
+      "location": "College Station, TX",
+      "degree": "Master of Computer Science",
+      "date": "Aug 2025 - Dec 2026",
+      "details": [
+        "Relevant Courses: Software Engineering, Parallel Computing, Deep Learning"
+      ]
+    },
+    {
+      "institution": "National Tsing Hua University (NTHU)",
+      "location": "Taiwan",
+      "degree": "Bachelor of Science in Computer Science",
+      "date": "Sep 2020 - Dec 2024",
+      "details": []
+    }
+  ],
+  "work_experience": [
+    {
+      "company": "SaturnAI",
+      "location": "Taiwan",
+      "role": "AI Software Engineer | Personal Protective Equipment Detection System",
+      "date": "Jun 2025 - Aug 2025",
+      "highlights": [
+        "Engineered a real-time PPE detection system for industrial RTSP video streams, scaling ingestion from 1 to 30 concurrent streams and sustaining 50+ FPS inference on edge devices",
+        "Implemented multithreaded Python ingestion to enable parallel RTSP stream processing",
+        "Integrated YOLOv8-based PPE detection with CUDA acceleration for real-time inference on edge devices",
+        "Delivered a PyQt6 dashboard with real-time detection overlays for multi-zone monitoring by non-technical staff"
+      ]
+    },
+    {
+      "company": "Institute of Information Science, Academia Sinica",
+      "location": "Taiwan",
+      "role": "Research Assistant | Generative AI Model Optimization",
+      "date": "Oct 2023 - May 2024",
+      "highlights": [
+        "Built the first unified generative framework for dual-task kinship synthesis, enabling the system to predict both child and partner faces from single-parent inputs",
+        "Integrated StyleGAN2 and 1D Diffusion Transformers to engineer the StyleDiT pipeline, optimizing sampling strategies to improve output diversity scores by 9%",
+        "Implemented Relational Trait Guidance (RTG) logic to enforce precise attribute control, achieving 99.9% gender accuracy and minimized age error (0.0023 MSE)"
+      ]
+    },
+    {
+      "company": "Computer Graphics and Vision Lab, NTHU",
+      "location": "Taiwan",
+      "role": "Research Assistant | ML-based Image Quality Assessment",
+      "date": "Sep 2022 - Dec 2023",
+      "highlights": [
+        "Built a Unity-based data generation pipeline producing 10,000+ samples to accelerate dataset creation and improve robustness to aliasing artifacts",
+        "Fine-tuned CNN models on the generated dataset, achieving a 10% lift in AUC over baseline approaches",
+        "Optimized EfficientNetV2 to cut inference latency by 46% and reduce CUDA memory usage by 69%"
+      ]
+    },
+    {
+      "company": "Fortune Technology Systems Corp.",
+      "location": "Taiwan",
+      "role": "Assistant Engineer | IT Infrastructure Optimization",
+      "date": "Jul 2022 - Sep 2022",
+      "highlights": [
+        "Saved 3,000+ hours of manual effort by automating system upgrades with custom batch scripts, reducing deployment time from 2 hours to 30 minutes for 2,000+ users",
+        "Standardized network group assignments and configuration scripts across departments to minimize rollout errors and ensure consistent IT operations"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Sentiment Aware Chatroom Monitor",
+      "technologies": "PyTorch, Transformers, Socket.IO, JavaScript",
+      "highlights": [
+        "Designed and built a real-time system to detect toxic messages using sentiment analysis, leading a team of 4 engineers",
+        "Fine-tuned a pre-trained Chinese BERT model on a custom dataset of chat logs, achieving 87% accuracy and increasing toxic message classification AUC by 36%",
+        "Engineered a full-stack solution with a Python backend and WebSocket-based frontend alerts, enabling users to take immediate action on flagged content"
+      ]
+    },
+    {
+      "name": "ART - Agentic Resume Tailor",
+      "technologies": "React, Python, FastAPI, RAG, AI Agents, SQLite, ChromaDB",
+      "highlights": [
+        "Built a local-first tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts",
+        "Designed a multi-agent loop (Query -> Retrieve -> Rewrite -> Score) with iterative boost terms, optimizing content coverage against Job Description requirements",
+        "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone"
+      ]
+    },
+    {
+      "name": "ZapMail - AI-Driven Email Automation Platform",
+      "technologies": "Ruby on Rails, PostgreSQL, Redis, Sidekiq, Heroku",
+      "highlights": [
+        "Architected an email automation platform in Ruby on Rails, integrating GPT-4o to generate personalized content",
+        "Engineered a scalable background processing system using Sidekiq and Redis to manage high-volume async delivery",
+        "Spearheaded the adoption of TDD/BDD principles across a 4-developer team, enforcing comprehensive RSpec/Cucumber test coverage to prevent regression in critical workflows"
+      ]
+    },
+    {
+      "name": "Kuiz - Educational Video Platform",
+      "technologies": "Vue, TypeScript, Python, FastAPI, Firebase",
+      "highlights": [
+        "Led a 5-member team to win 1st Prize at Meichu Hackathon by developing a TikTok-inspired educational platform",
+        "Built a mobile-first frontend with swipe navigation and VOD playback optimized for learning",
+        "Developed a FastAPI backend with authentication, video tagging, and playlist endpoints deployed to Firebase",
+        "Improved user engagement by implementing a neural collaborative filtering recommendation engine"
+      ]
+    }
+  ]
+}
