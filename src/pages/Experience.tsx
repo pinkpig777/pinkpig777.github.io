@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   FaBriefcase,
   FaChevronDown,
@@ -117,13 +117,22 @@ export default function Experience() {
     sortDate: getSortDate(entry.date).getTime(),
   }));
 
-  const timelineItems = [...educationItems, ...workItems].sort(
+  const sortedEducationItems = [...educationItems].sort(
+    (a, b) => b.sortDate - a.sortDate,
+  );
+  const sortedWorkItems = [...workItems].sort(
+    (a, b) => b.sortDate - a.sortDate,
+  );
+  const timelineItems = [...sortedEducationItems, ...sortedWorkItems].sort(
     (a, b) => b.sortDate - a.sortDate,
   );
   const filteredTimelineItems =
     viewFilter === 'all'
       ? timelineItems
-      : timelineItems.filter((item) => item.type === viewFilter);
+      : viewFilter === 'work'
+      ? sortedWorkItems
+      : sortedEducationItems;
+
 
   const toggleItem = (key: string) => {
     setExpandedItems((prev) => ({
@@ -203,63 +212,69 @@ export default function Experience() {
         </button>
       </motion.div>
 
-      <motion.div className="experience-timeline" variants={itemVariants}>
-        {filteredTimelineItems.map((item, index) => {
-          const range = formatRange(item.date);
-          const itemKey = `${item.type}-${item.org}-${item.title}-${index}`;
-          const isExpanded = expandAll || Boolean(expandedItems[itemKey]);
-          return (
-            <motion.article
-              key={`${item.type}-${item.org}-${index}`}
-              className={`experience-item experience-item--${item.type}`}
-              variants={itemVariants}
-            >
-              <div className="experience-time">
-                <span className="experience-time-start">{range.start}</span>
-                <span className="experience-time-end">{range.end}</span>
-              </div>
-              <div className="experience-node">
-                <span className="experience-dot" />
-              </div>
-              <div className="experience-card">
-                <div className="experience-card-header">
-                  <div className="experience-card-heading">
-                    <div className="experience-card-icon">
-                      {item.type === 'education' ? <FaGraduationCap /> : <FaBriefcase />}
+      <div className="experience-timeline">
+        <AnimatePresence mode="popLayout">
+          {filteredTimelineItems.map((item, index) => {
+            const range = formatRange(item.date);
+            const itemKey = `${item.type}-${item.org}-${item.title}-${index}`;
+            const isExpanded = expandAll || Boolean(expandedItems[itemKey]);
+            return (
+              <motion.article
+                key={`${item.type}-${item.org}-${index}`}
+                className={`experience-item experience-item--${item.type}`}
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              >
+                <div className="experience-time">
+                  <span className="experience-time-start">{range.start}</span>
+                  <span className="experience-time-end">{range.end}</span>
+                </div>
+                <div className="experience-node">
+                  <span className="experience-dot" />
+                </div>
+                <div className="experience-card">
+                  <div className="experience-card-header">
+                    <div className="experience-card-heading">
+                      <div className="experience-card-icon">
+                        {item.type === 'education' ? <FaGraduationCap /> : <FaBriefcase />}
+                      </div>
+                      <div>
+                        <h3 className="experience-card-title">{item.title}</h3>
+                        <p className="experience-card-org">{item.org}</p>
+                        <p className="experience-card-location">
+                          <FaMapMarkerAlt />
+                          <span>{item.location}</span>
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="experience-card-title">{item.title}</h3>
-                      <p className="experience-card-org">{item.org}</p>
-                      <p className="experience-card-location">
-                        <FaMapMarkerAlt />
-                        <span>{item.location}</span>
-                      </p>
-                    </div>
+                    {item.details.length > 0 && (
+                      <button
+                        type="button"
+                        className="experience-toggle"
+                        onClick={() => toggleItem(itemKey)}
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                      >
+                        {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                      </button>
+                    )}
                   </div>
-                  {item.details.length > 0 && (
-                    <button
-                      type="button"
-                      className="experience-toggle"
-                      onClick={() => toggleItem(itemKey)}
-                      aria-expanded={isExpanded}
-                      aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
-                    >
-                      {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-                    </button>
+                  {item.details.length > 0 && isExpanded && (
+                    <ul className="experience-card-list">
+                      {item.details.map((detail, detailIndex) => (
+                        <li key={`${item.org}-${detailIndex}`}>{detail}</li>
+                      ))}
+                    </ul>
                   )}
                 </div>
-                {item.details.length > 0 && isExpanded && (
-                  <ul className="experience-card-list">
-                    {item.details.map((detail, detailIndex) => (
-                      <li key={`${item.org}-${detailIndex}`}>{detail}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </motion.article>
-          );
-        })}
-      </motion.div>
+              </motion.article>
+            );
+          })}
+        </AnimatePresence>
+      </div>
     </motion.section>
   );
 }

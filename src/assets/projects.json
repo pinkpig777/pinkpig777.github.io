@@ -1,19 +1,10 @@
 [
   {
-    "id": "art",
-    "title": "ART - Agentic Resume Tailor",
-    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
-    "category": "AI/ML",
-    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
-    "description": [
-      "Built a local-first tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
-      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
-      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
-    ]
-  },
-  {
     "id": "sentiment-monitor",
     "title": "Sentiment Aware Chatroom Monitor",
+    "context": [
+      "Real-time moderation system for detecting toxic messages, team-led NLP pipeline with BERT fine-tuning and live alerts."
+    ],
     "tags": ["PyTorch", "Transformers", "Socket.IO", "JavaScript"],
     "category": "AI/ML",
     "link": "https://github.com/pinkpig777/Chatroom_Monitor_based_on_Sentiment_Analysis",
@@ -26,6 +17,9 @@
   {
     "id": "zapmail",
     "title": "ZapMail: AI-Driven Email Automation Platform",
+    "context": [
+      "AI-assisted outbound email automation at scale, high-volume background processing with Rails + Sidekiq."
+    ],
     "tags": ["Ruby on Rails", "PostgreSQL", "Redis", "Sidekiq", "Heroku"],
     "category": "Full Stack",
     "link": "https://github.com/TAMUCSCE-606-Zapmail/ZapMail",
@@ -36,8 +30,26 @@
     ]
   },
   {
+    "id": "art",
+    "title": "ART - Agentic Resume Tailor",
+    "context": [
+      "Automatic resume tailoring with agentic workflows, RAG-backed rewriting with strict factual guardrails."
+    ],
+    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
+    "category": "AI/ML",
+    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
+    "description": [
+      "Built an automatic tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
+      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
+      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
+    ]
+  },
+  {
     "id": "kuiz",
     "title": "Kuiz - Educational Video Platform",
+    "context": [
+      "TikTok-inspired learning platform with swipe navigation, award-winning build for Meichu Hackathon."
+    ],
     "tags": ["Vue.js", "TypeScript", "Python", "FastAPI", "Firebase"],
     "category": "Full Stack",
     "link": "https://www.canva.com/design/DAFx6W80Bf8/ov6qqNMvedXMctArLpB1Mg/edit?utm_content=DAFx6W80Bf8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
@@ -51,16 +63,12 @@
   {
     "id": "stock-tracker",
     "title": "Stock-Tracker: Asset Dashboard",
-    "tags": [
-      "React",
-      "Tailwind CSS",
-      "Recharts",
-      "Supabase",
-      "Postgres",
-      "Finnhub API"
+    "context": [
+      "Real-time portfolio and allocation monitoring with RLS support and Supabase Auth."
     ],
-    "category": "Other",
     "link": "https://stock-tracker-kappa-ten.vercel.app/",
+    "tags": ["React (Vite)", "Tailwind CSS", "Recharts", "Supabase", "Postgres", "Finnhub API"],
+    "category": "Other",
     "description": [
       "Built “Asset Dashboard,” a secure, real-time portfolio tracker with Supabase magic-link auth and live Finnhub market data.",
       "Designed an asset allocation view with interactive pie chart, smart color system, and responsive legend for clear holdings breakdown.",
