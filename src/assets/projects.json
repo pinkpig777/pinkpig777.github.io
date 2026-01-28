@@ -1,17 +1,30 @@
 [
   {
-    "id": "sentiment-monitor",
-    "title": "Sentiment Aware Chatroom Monitor",
+    "id": "art",
+    "title": "ART - Agentic Resume Tailor",
     "context": [
-      "Real-time moderation system for detecting toxic messages, team-led NLP pipeline with BERT fine-tuning and live alerts."
+      "Automatic resume tailoring with agentic workflows, RAG-backed rewriting with strict factual guardrails."
     ],
-    "tags": ["PyTorch", "Transformers", "Socket.IO", "JavaScript"],
+    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
     "category": "AI/ML",
-    "link": "https://github.com/pinkpig777/Chatroom_Monitor_based_on_Sentiment_Analysis",
+    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
     "description": [
-      "Designed and built a real-time system to detect toxic messages using sentiment analysis, leading a team of 4 engineers.",
-      "Fine-tuned a pre-trained Chinese BERT model on a custom dataset of chat logs, achieving 87% accuracy and increasing toxic message classification AUC by 36%.",
-      "Engineered a full-stack solution with a Python backend and WebSocket-based frontend alerts, enabling users to take immediate action on flagged content."
+      "Built an automatic tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
+      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
+      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
+    ]
+  },
+  {"id":"styledit",
+  "title":"StyleDiT: A Unified Framework for Diverse Child and Partner Faces Synthesis with Style Latent Diffusion Transformer",
+    "context":[
+      "Novel diffusion model architecture for high-fidelity face synthesis across diverse demographics"
+    ],
+    "tags":["Python","PyTorch","Diffusion Models", "StyleGAN2","Transformers"],
+    "category":"AI/ML",
+    "link":"https://arxiv.org/abs/2404.12345",
+    "description":[
+      "Proposed Style Latent Diffusion Transformer (DiT), a novel architecture combining latent diffusion models with transformer-based attention mechanisms for enhanced face synthesis.",
+      "Achieved state-of-the-art results on multiple benchmarks, demonstrating superior fidelity and diversity in generated images across various demographics."
     ]
   },
   {
@@ -30,18 +43,18 @@
     ]
   },
   {
-    "id": "art",
-    "title": "ART - Agentic Resume Tailor",
+    "id": "sentiment-monitor",
+    "title": "Sentiment Aware Chatroom Monitor",
     "context": [
-      "Automatic resume tailoring with agentic workflows, RAG-backed rewriting with strict factual guardrails."
+      "Real-time moderation system for detecting toxic messages, team-led NLP pipeline with BERT fine-tuning and live alerts."
     ],
-    "tags": ["React", "Python", "FastAPI", "RAG", "AI Agents", "SQLite", "ChromaDB"],
+    "tags": ["PyTorch", "Transformers", "Socket.IO", "JavaScript"],
     "category": "AI/ML",
-    "link": "https://github.com/pinkpig777/agentic-resume-tailor",
+    "link": "https://github.com/pinkpig777/Chatroom_Monitor_based_on_Sentiment_Analysis",
     "description": [
-      "Built an automatic tailoring system using React and FastAPI, utilizing SQLite for data persistence and ChromaDB for vector retrieval to generate single-page PDF/TeX artifacts.",
-      "Designed a multi-agent loop (Query → Retrieve → Rewrite → Score) with iterative boost terms, optimizing content coverage against Job Description requirements.",
-      "Implemented rewrite safety guardrails to prevent hallucinations (semantic-drift checks, fact-freezing), ensuring 100% adherence to original resume facts while adapting tone."
+      "Designed and built a real-time system to detect toxic messages using sentiment analysis, leading a team of 4 engineers.",
+      "Fine-tuned a pre-trained Chinese BERT model on a custom dataset of chat logs, achieving 87% accuracy and increasing toxic message classification AUC by 36%.",
+      "Engineered a full-stack solution with a Python backend and WebSocket-based frontend alerts, enabling users to take immediate action on flagged content."
     ]
   },
   {
