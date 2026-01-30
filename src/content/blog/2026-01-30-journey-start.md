@@ -1,7 +1,7 @@
 ---
-title: "A journey to a Quant Developer"
+title: "A Personal Journey Toward Quant Development"
 date: "2026-01-30"
-summary: "Start learning basic quant dev stuff."
+summary: "Motivation, initiative, and plan."
 tags: ["quant"]
 ---
 
@@ -172,12 +172,3 @@ This document will serve as a record of that journey.
 - **Brainteasers:** Solve the first 50 problems in "Heard on the Street."
 - **Coding:** LeetCode "Hard" (Focus: Arrays, Bit Manipulation, Monotonic Queues).
 
-
-
-
-
-## What's next
-
-- Short project updates
-- Notes on engineering and design
-- Helpful links and resources -->
