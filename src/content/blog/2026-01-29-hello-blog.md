@@ -1,13 +1,15 @@
 ---
 title: "Hello, Weekly Blog"
-date: "2026-01-30"
+date: "2026-01-29"
 summary: "Kicking off a weekly blog on GitHub Pages with Markdown posts."
 tags: ["blog", "markdown", "math"]
 ---
 
 # Initial Blog Post
 
-I'm starting a weekly blog to share what I'm building, learning, and exploring.
+I'm starting a weekly blog to share what I'm building, learning, and exploring. 
+
+This page tests all the functionalites that may be used in the future.
 
 ## Markdown + Math
 
@@ -28,6 +30,6 @@ type Post = {
 
 ## What's next
 
+- Learning journal
 - Short project updates
-- Notes on engineering and design
 - Helpful links and resources

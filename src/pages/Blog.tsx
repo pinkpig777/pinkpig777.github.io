@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { blogPosts } from '../generated/blog';
 
 const parseLocalDate = (value: string) => {
@@ -18,18 +19,46 @@ const formatDate = (value: string) => {
   }).format(date);
 };
 
+const pageVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+};
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+};
+
 export default function Blog() {
   return (
-    <section className="blog-section">
-      <h1>Blog</h1>
-      <p className="blog-subtext">Weekly notes, projects, and experiments.</p>
+    <motion.section className="blog-section" variants={pageVariants} initial="hidden" animate="show">
+      <motion.h1 variants={itemVariants}>Blog</motion.h1>
+      <motion.p className="blog-subtext" variants={itemVariants}>
+        Weekly notes, projects, and experiments.
+      </motion.p>
 
       {blogPosts.length === 0 ? (
-        <p>New posts are coming soon.</p>
+        <motion.p variants={itemVariants}>New posts are coming soon.</motion.p>
       ) : (
-        <div className="blog-list">
+        <motion.div className="blog-list" variants={listVariants}>
           {blogPosts.map((post) => (
-            <article className="blog-card" key={post.slug}>
+            <motion.article className="blog-card" key={post.slug} variants={cardVariants}>
               <div className="blog-card__meta">
                 <time dateTime={post.date}>{formatDate(post.date)}</time>
                 {post.tags.length > 0 && (
@@ -49,10 +78,10 @@ export default function Blog() {
               <Link className="blog-readmore" to={`/blog/${post.slug}`}>
                 Read the article
               </Link>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       )}
-    </section>
+    </motion.section>
   );
 }
