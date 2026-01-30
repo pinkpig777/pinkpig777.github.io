@@ -1,10 +1,16 @@
 import { Link } from 'react-router-dom';
 import { blogPosts } from '../generated/blog';
 
+const parseLocalDate = (value: string) => {
+  if (!value) return null;
+  const [year, month, day] = value.split('-').map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+};
+
 const formatDate = (value: string) => {
-  if (!value) return '';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
+  const date = parseLocalDate(value);
+  if (!date || Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
