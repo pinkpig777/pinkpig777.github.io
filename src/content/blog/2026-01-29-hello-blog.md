@@ -1,7 +1,7 @@
 ---
 title: "Hello, Weekly Blog"
 date: "2026-01-29"
-summary: "Kicking off a weekly blog on GitHub Pages with Markdown posts."
+summary: "Kicking off a weekly blog."
 tags: ["blog", "markdown", "math"]
 ---
 
