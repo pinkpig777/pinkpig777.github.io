@@ -2,7 +2,14 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
-import { marked } from 'marked';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import remarkRehype from 'remark-rehype';
+import rehypeKatex from 'rehype-katex';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeStringify from 'rehype-stringify';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,7 +18,14 @@ const contentDir = path.join(rootDir, 'src', 'content', 'blog');
 const outputDir = path.join(rootDir, 'src', 'generated');
 const outputFile = path.join(outputDir, 'blog.ts');
 
-marked.use({ mangle: false, headerIds: false });
+const markdownProcessor = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkMath)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeKatex)
+  .use(rehypeHighlight, { detect: true, ignoreMissing: true })
+  .use(rehypeStringify, { allowDangerousHtml: true });
 
 const normalizeDate = (value) => {
   if (!value) return '';
@@ -81,7 +95,7 @@ const buildBlog = async () => {
     const date = normalizeDate(data.date);
     const tags = normalizeTags(data.tags);
     const summary = data.summary ? String(data.summary) : buildSummary(content);
-    const html = marked.parse(content);
+    const html = String(await markdownProcessor.process(content));
 
     posts.push({
       slug,

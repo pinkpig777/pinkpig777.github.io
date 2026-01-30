@@ -2,16 +2,29 @@
 title: "Hello, Weekly Blog"
 date: "2026-01-30"
 summary: "Kicking off a weekly blog on GitHub Pages with Markdown posts."
-tags: ["github-pages", "markdown", "personal"]
+tags: ["blog", "markdown", "math"]
 ---
 
-# Hello, Weekly Blog
+# Initial Blog Post
 
 I'm starting a weekly blog to share what I'm building, learning, and exploring.
 
-## Why GitHub Pages
+## Markdown + Math
 
-It's simple, free, and fast. I can write Markdown, commit, and deploy without a database.
+Inline math like $E = mc^2$ works, and so do display blocks:
+
+$$
+\int_{0}^{\infty} e^{-x^2} \, dx = \frac{\sqrt{\pi}}{2}
+$$
+
+## Code snippet
+
+```ts
+type Post = {
+  title: string;
+  date: string;
+};
+```
 
 ## What's next
 
