@@ -530,6 +530,8 @@ html:not(.dark) .tag {
   margin: 0 auto;
   text-align: left;
   padding-top: var(--space-xl);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .blog-subtext {
@@ -606,6 +608,8 @@ html:not(.dark) .tag {
 .blog-post__content {
   margin-top: var(--space-lg);
   line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .blog-post__content h2,
@@ -627,11 +631,36 @@ html:not(.dark) .tag {
   border-radius: 6px;
 }
 
+.blog-post__content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-lg) 0;
+}
+
+.blog-post__content table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.blog-post__content th,
+.blog-post__content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
 .blog-post__content pre {
   background: var(--code-bg);
   padding: 16px;
   border-radius: 10px;
-  overflow: auto;
+  overflow-x: auto;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--code-border);
 }
 
@@ -706,6 +735,7 @@ html:not(.dark) .tag {
 
 .blog-post__content img {
   max-width: 100%;
+  height: auto;
   border-radius: 12px;
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
 }
@@ -1244,6 +1274,23 @@ html:not(.dark) .tag {
   .contact-item {
     flex-direction: column;
     gap: var(--space-xs);
+  }
+
+  .blog-section,
+  .blog-post {
+    padding-top: var(--space-lg);
+  }
+
+  .blog-card {
+    padding: var(--space-sm);
+  }
+
+  .blog-post__content pre {
+    padding: 12px;
+  }
+
+  .blog-post__content code {
+    font-size: 0.85rem;
   }
 
   .footer-clean {
