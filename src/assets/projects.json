@@ -74,6 +74,31 @@
     ]
   },
   {
+    "id": "conversation-series-manager",
+    "title": "Conversation Series Manager",
+    "context": [
+      "End-to-end conversation-program operations platform with public booking, multi-admin availability management, and an internal session workspace."
+    ],
+    "tags": [
+      "React",
+      "TypeScript",
+      "Firebase",
+      "Cloud Firestore",
+      "Tailwind CSS",
+      "TanStack Query",
+      "React Hook Form",
+      "Zod",
+      "Vite"
+    ],
+    "category": "Other",
+    "link": "https://conversation-session.web.app/",
+    "description": [
+      "Built a full-stack operations app for running structured conversation sessions, including public registration, participant CRM, reusable question bank, session management, and dashboard analytics.",
+      "Designed a when2meet-style scheduling flow where admins publish availability and participants can reserve only future blocks backed by at least two available admins, with Firestore transactions ensuring slot/session consistency.",
+      "Developed a live session workspace with notes, Google Meet logistics, auto-synced status tracking, message generation, and a combined pacing coach plus conversation timer to support real-time facilitation."
+    ]
+  },
+  {
     "id": "stock-tracker",
     "title": "Stock-Tracker: Asset Dashboard",
     "context": [

@@ -1,81 +1,133 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
-import { FaSun, FaMoon, FaBars, FaTimes } from 'react-icons/fa';
+import { useTheme } from '../context/useTheme';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, MoonStar, Sparkles, SunMedium, X } from 'lucide-react';
+import { cn } from '../utils/cn';
+
+const navigation = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Experience', href: '/experience' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
+] as const;
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+  const [openLocationKey, setOpenLocationKey] = useState<string | null>(null);
   const location = useLocation();
   const isBlog = location.pathname.startsWith('/blog');
+  const isOpen = openLocationKey === location.key;
 
-  // Close menu when route changes
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
+  const toggleMenu = () => {
+    setOpenLocationKey((current) =>
+      current === location.key ? null : location.key,
+    );
+  };
+
+  const closeMenu = () => {
+    setOpenLocationKey(null);
+  };
+
+  const isActive = (href: string) =>
+    href === '/blog'
+      ? isBlog
+      : location.pathname === href;
 
   return (
-    <header style={{ position: 'relative', zIndex: 50 }}>
-      {/* Desktop & Mobile Top Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* Desktop Nav */}
-        <nav className="desktop-nav">
-          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link>
-          <Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</Link>
-          <Link to="/projects" className={location.pathname === '/projects' ? 'active' : ''}>Projects</Link>
-          <Link to="/experience" className={location.pathname === '/experience' ? 'active' : ''}>Experience</Link>
-          <Link to="/blog" className={isBlog ? 'active' : ''}>Blog</Link>
-          <Link to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</Link>
-        </nav>
+    <header className="sticky top-0 z-50 pt-4">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="surface rounded-full px-3 py-3 sm:px-4">
+          <div className="flex items-center justify-between gap-3">
+            <Link
+              to="/"
+              className="flex min-w-0 items-center gap-3 rounded-full px-2 py-1.5 transition hover:bg-zinc-950/[0.04] dark:hover:bg-white/[0.06]"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold tracking-[-0.02em] text-zinc-950 dark:text-white">
+                  Charlie Chiu
+                </p>
+                <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
+                  AI + Full-Stack Engineer
+                </p>
+              </div>
+            </Link>
 
-        {/* Mobile Hamburger (Visible only on mobile via CSS) */}
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <FaTimes /> : <FaBars />}
-        </button>
+            <nav className="hidden items-center gap-1 lg:flex">
+              {navigation.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    'rounded-full px-4 py-2 text-sm font-medium transition',
+                    isActive(item.href)
+                      ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
+                      : 'text-zinc-500 hover:bg-zinc-950/[0.04] hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-white',
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-        <button
-          onClick={toggleTheme}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            color: 'var(--text)',
-            fontSize: '1.2rem',
-            padding: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            transition: 'transform 0.2s ease',
-          }}
-          aria-label="Toggle Dark Mode"
-        >
-          {theme === 'light' ? <FaMoon /> : <FaSun />}
-        </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label="Toggle theme"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-zinc-200/80 bg-white/70 text-zinc-700 transition hover:border-zinc-300 hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.05] dark:text-zinc-300 dark:hover:border-white/20 dark:hover:text-white"
+              >
+                {theme === 'dark' ? (
+                  <SunMedium className="h-4 w-4" />
+                ) : (
+                  <MoonStar className="h-4 w-4" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={toggleMenu}
+                aria-label="Toggle menu"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-zinc-200/80 bg-white/70 text-zinc-700 transition hover:border-zinc-300 hover:text-zinc-950 lg:hidden dark:border-white/10 dark:bg-white/[0.05] dark:text-zinc-300 dark:hover:border-white/20 dark:hover:text-white"
+              >
+                {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {isOpen && (
+              <motion.nav
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="mt-3 grid gap-2 border-t border-zinc-200/80 pt-3 lg:hidden dark:border-white/10"
+              >
+                {navigation.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={closeMenu}
+                    className={cn(
+                      'rounded-2xl px-4 py-3 text-sm font-medium transition',
+                      isActive(item.href)
+                        ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
+                        : 'text-zinc-600 hover:bg-zinc-950/[0.04] hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-white',
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </motion.nav>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.nav
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mobile-nav"
-          >
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-            <Link to="/projects">Projects</Link>
-            <Link to="/experience">Experience</Link>
-            <Link to="/blog">Blog</Link>
-            <Link to="/contact">Contact</Link>
-          </motion.nav>
-        )}
-      </AnimatePresence>
     </header>
   );
 }

@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  FaBriefcase,
-  FaChevronDown,
-  FaChevronUp,
-  FaGraduationCap,
-  FaMapMarkerAlt,
-} from 'react-icons/fa';
+  BriefcaseBusiness,
+  CalendarRange,
+  ChevronDown,
+  ChevronUp,
+  GraduationCap,
+  MapPin,
+} from 'lucide-react';
 import experienceData from '../assets/experience/data.json';
+import BentoPanel from '../components/BentoPanel';
+import SectionHeading from '../components/SectionHeading';
+import SegmentedControl, {
+  type SegmentedControlOption,
+} from '../components/SegmentedControl';
 
 type EducationEntry = {
   institution: string;
@@ -28,11 +34,6 @@ type WorkEntry = {
 type ExperienceData = {
   education: EducationEntry[];
   work_experience: WorkEntry[];
-  projects?: {
-    name: string;
-    technologies: string;
-    highlights: string[];
-  }[];
 };
 
 type TimelineItem = {
@@ -46,6 +47,7 @@ type TimelineItem = {
 };
 
 const data = experienceData as ExperienceData;
+type ExperienceFilter = 'all' | 'work' | 'education';
 
 const MONTH_INDEX: Record<string, number> = {
   Jan: 0,
@@ -79,10 +81,16 @@ const formatRange = (range: string) => {
   return { start, end: end ?? '' };
 };
 
+const filterOptions: Array<SegmentedControlOption<ExperienceFilter>> = [
+  { value: 'all', label: 'All' },
+  { value: 'work', label: 'Work', icon: BriefcaseBusiness },
+  { value: 'education', label: 'Education', icon: GraduationCap },
+];
+
 export default function Experience() {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [expandAll, setExpandAll] = useState(false);
-  const [viewFilter, setViewFilter] = useState<'all' | 'work' | 'education'>('all');
+  const [viewFilter, setViewFilter] = useState<ExperienceFilter>('all');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -143,138 +151,150 @@ export default function Experience() {
 
   return (
     <motion.section
-      className="experience-section"
+      className="w-full space-y-6 lg:space-y-8"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <motion.h1 variants={itemVariants}>My Experience</motion.h1>
-      <motion.p className="experience-subtext" variants={itemVariants}>
-        Timeline of education and work experience.
-      </motion.p>
+      <SectionHeading
+        eyebrow="Experience"
+        title="A leaner timeline with the details hidden until they matter."
+        description="Work and education are kept on one vertical track. The first pass is easy to scan; the deeper descriptions live behind accordions."
+      />
 
-      <motion.div className="experience-stats" variants={itemVariants}>
-        <div className="experience-stat experience-stat--work">
-          <div className="experience-stat-icon">
-            <FaBriefcase />
-          </div>
-          <div>
-            <div className="experience-stat-value">{data.work_experience.length}</div>
-            <div className="experience-stat-label">Positions Held</div>
-          </div>
-        </div>
-        <div className="experience-stat experience-stat--edu">
-          <div className="experience-stat-icon">
-            <FaGraduationCap />
-          </div>
-          <div>
-            <div className="experience-stat-value">{data.education.length}</div>
-            <div className="experience-stat-label">Degrees</div>
-          </div>
-        </div>
+      <motion.div variants={itemVariants} className="grid gap-4 md:grid-cols-2">
+        <BentoPanel className="rounded-[28px] p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+            Roles
+          </p>
+          <p className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-zinc-950 dark:text-white">
+            {data.work_experience.length}
+          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            Applied engineering and research roles across industry and academia.
+          </p>
+        </BentoPanel>
+        <BentoPanel className="rounded-[28px] p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+            Education
+          </p>
+          <p className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-zinc-950 dark:text-white">
+            {data.education.length}
+          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            Formal training in computer science with a strong ML and systems slant.
+          </p>
+        </BentoPanel>
       </motion.div>
 
-      <motion.div className="experience-controls" variants={itemVariants}>
-        <div className="experience-filter" role="tablist" aria-label="Experience filter">
-          <button
-            type="button"
-            className={`experience-filter-btn ${viewFilter === 'all' ? 'is-active' : ''}`}
-            data-filter="all"
-            onClick={() => setViewFilter('all')}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            className={`experience-filter-btn ${viewFilter === 'work' ? 'is-active' : ''}`}
-            data-filter="work"
-            onClick={() => setViewFilter('work')}
-          >
-            <FaBriefcase />
-            Work
-          </button>
-          <button
-            type="button"
-            className={`experience-filter-btn ${viewFilter === 'education' ? 'is-active' : ''}`}
-            data-filter="education"
-            onClick={() => setViewFilter('education')}
-          >
-            <FaGraduationCap />
-            Edu
-          </button>
-        </div>
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
+      >
+        <SegmentedControl
+          id="experience-filter"
+          options={filterOptions}
+          value={viewFilter}
+          onChange={setViewFilter}
+        />
         <button
           type="button"
-          className="experience-toggle-all"
           onClick={() => setExpandAll((prev) => !prev)}
+          className="inline-flex items-center justify-center rounded-full border border-zinc-200/80 bg-white/70 px-4 py-2.5 text-sm font-semibold text-zinc-700 backdrop-blur-xl transition hover:border-zinc-300 hover:text-zinc-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-200 dark:hover:border-white/20 dark:hover:text-white"
         >
           {expandAll ? 'Collapse all details' : 'Expand all details'}
         </button>
       </motion.div>
 
-      <div className="experience-timeline">
-        <AnimatePresence mode="popLayout">
-          {filteredTimelineItems.map((item, index) => {
-            const range = formatRange(item.date);
-            const itemKey = `${item.type}-${item.org}-${item.title}-${index}`;
-            const isExpanded = expandAll || Boolean(expandedItems[itemKey]);
-            return (
-              <motion.article
-                key={`${item.type}-${item.org}-${index}`}
-                className={`experience-item experience-item--${item.type}`}
-                layout
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-              >
-                <div className="experience-time">
-                  <span className="experience-time-start">{range.start}</span>
-                  <span className="experience-time-end">{range.end}</span>
-                </div>
-                <div className="experience-node">
-                  <span className="experience-dot" />
-                </div>
-                <div className="experience-card">
-                  <div className="experience-card-header">
-                    <div className="experience-card-heading">
-                      <div className="experience-card-icon">
-                        {item.type === 'education' ? <FaGraduationCap /> : <FaBriefcase />}
+      <motion.div variants={itemVariants} className="relative">
+        <div className="absolute bottom-0 left-[13px] top-3 w-px bg-zinc-200 dark:bg-white/10" />
+        <div className="space-y-4">
+          <AnimatePresence initial={false}>
+            {filteredTimelineItems.map((item, index) => {
+              const range = formatRange(item.date);
+              const itemKey = `${item.type}-${item.org}-${item.title}-${index}`;
+              const isExpanded = expandAll || Boolean(expandedItems[itemKey]);
+              const Icon = item.type === 'education' ? GraduationCap : BriefcaseBusiness;
+
+              return (
+                <motion.article
+                  key={`${item.type}-${item.org}-${index}`}
+                  layout
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.24 }}
+                  className="relative pl-10"
+                >
+                  <span className="absolute left-0 top-7 h-[26px] w-[26px] rounded-full border-[6px] border-emerald-500 bg-zinc-50 shadow-[0_0_0_6px_rgba(16,185,129,0.12)] dark:bg-zinc-950" />
+                  <BentoPanel className="rounded-[30px] p-5 sm:p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex gap-4">
+                        <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-zinc-200/80 bg-white/80 px-3 py-1 dark:border-white/10 dark:bg-white/[0.04]">
+                              <CalendarRange className="h-4 w-4" />
+                              {range.start}
+                              {range.end ? ` — ${range.end}` : ''}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <MapPin className="h-4 w-4" />
+                              {item.location}
+                            </span>
+                          </div>
+                          <h3 className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-zinc-950 dark:text-white">
+                            {item.title}
+                          </h3>
+                          <p className="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
+                            {item.org}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="experience-card-title">{item.title}</h3>
-                        <p className="experience-card-org">{item.org}</p>
-                        <p className="experience-card-location">
-                          <FaMapMarkerAlt />
-                          <span>{item.location}</span>
-                        </p>
-                      </div>
+                      {item.details.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => toggleItem(itemKey)}
+                          aria-expanded={isExpanded}
+                          aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-zinc-200/80 text-zinc-600 transition hover:border-zinc-300 hover:text-zinc-950 dark:border-white/10 dark:text-zinc-300 dark:hover:border-white/20 dark:hover:text-white"
+                        >
+                          {isExpanded ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </button>
+                      )}
                     </div>
-                    {item.details.length > 0 && (
-                      <button
-                        type="button"
-                        className="experience-toggle"
-                        onClick={() => toggleItem(itemKey)}
-                        aria-expanded={isExpanded}
-                        aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
-                      >
-                        {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-                      </button>
-                    )}
-                  </div>
-                  {item.details.length > 0 && isExpanded && (
-                    <ul className="experience-card-list">
-                      {item.details.map((detail, detailIndex) => (
-                        <li key={`${item.org}-${detailIndex}`}>{detail}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </motion.article>
-            );
-          })}
-        </AnimatePresence>
-      </div>
+
+                    <AnimatePresence initial={false}>
+                      {item.details.length > 0 && isExpanded && (
+                        <motion.ul
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.22 }}
+                          className="mt-5 space-y-3 overflow-hidden border-t border-zinc-200 pt-5 text-sm leading-7 text-zinc-600 dark:border-white/10 dark:text-zinc-300"
+                        >
+                          {item.details.map((detail, detailIndex) => (
+                            <li key={`${item.org}-${detailIndex}`} className="flex gap-3">
+                              <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-emerald-500" />
+                              <span>{detail}</span>
+                            </li>
+                          ))}
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </BentoPanel>
+                </motion.article>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      </motion.div>
     </motion.section>
   );
 }

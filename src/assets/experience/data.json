@@ -19,6 +19,16 @@
   ],
   "work_experience": [
     {
+      "company": "National Taiwan University",
+      "location": "Taiwan",
+      "role": "AI Research Assistant | RAG for research paper",
+      "date": "Jan 2026 - Present",
+      "highlights": [
+        "Engineered a scalable pipeline to extract and index research paper content using local LLMs",
+        "Implemented a RAG system that retrieves relevant paper sections to generate concise summaries, improving information retrieval efficiency for researchers"
+      ]
+    },
+    {
       "company": "SaturnAI",
       "location": "Taiwan",
       "role": "AI Software Engineer | Personal Protective Equipment Detection System",

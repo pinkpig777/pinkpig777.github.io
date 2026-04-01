@@ -1,62 +1,42 @@
 import { motion } from 'framer-motion';
-import { 
-  FaPython, FaJs, FaReact, FaNodeJs, FaCloud,
-  FaTerminal, FaCode, FaGem, FaBrain
-} from 'react-icons/fa';
-import { 
-  SiTypescript, SiRubyonrails, SiFastapi, SiPostgresql, 
-  SiPytorch, SiOpencv, SiNumpy, 
-  SiScikitlearn, SiDocker, SiLinux, SiFirebase
-} from 'react-icons/si';
+import {
+  Blocks,
+  BrainCircuit,
+  CloudCog,
+  Code2,
+  MonitorSmartphone,
+  ServerCog,
+  Sparkles,
+} from 'lucide-react';
+import BentoPanel from '../components/BentoPanel';
+import SectionHeading from '../components/SectionHeading';
 
 const skillGroups = [
   {
     title: 'Languages',
-    icon: <FaCode />,
-    skills: [
-      { name: 'Python', icon: <FaPython color="#3776ab" /> },
-      { name: 'TypeScript', icon: <SiTypescript color="#3178c6" /> },
-      { name: 'JavaScript', icon: <FaJs color="#f7df1e" /> },
-      { name: 'C++', icon: <FaCode color="#00599c" /> },
-      { name: 'Ruby', icon: <FaGem color="#cc342d" /> },
-    ]
+    icon: Code2,
+    skills: ['Python', 'TypeScript', 'JavaScript', 'C++', 'Ruby'],
   },
   {
     title: 'Frontend',
-    icon: <FaTerminal />,
-    skills: [
-      { name: 'React', icon: <FaReact color="#61dafb" /> },
-      { name: 'HTML/CSS', icon: <FaCode color="#e34f26" /> },
-    ]
+    icon: MonitorSmartphone,
+    skills: ['React', 'HTML/CSS', 'Tailwind CSS', 'Framer Motion'],
   },
   {
     title: 'Backend',
-    icon: <FaNodeJs />,
-    skills: [
-      { name: 'FastAPI', icon: <SiFastapi color="#05998b" /> },
-      { name: 'Rails', icon: <SiRubyonrails color="#cc0000" /> },
-    ]
+    icon: ServerCog,
+    skills: ['FastAPI', 'Rails', 'PostgreSQL', 'Firebase'],
   },
   {
     title: 'AI & CV',
-    icon: <FaBrain />,
-    skills: [
-      { name: 'PyTorch', icon: <SiPytorch color="#ee4c2c" /> },
-      { name: 'OpenCV', icon: <SiOpencv color="#5c3ee8" /> },
-      { name: 'NumPy', icon: <SiNumpy color="#013243" /> },
-      { name: 'Scikit-learn', icon: <SiScikitlearn color="#f7931e" /> },
-    ]
+    icon: BrainCircuit,
+    skills: ['PyTorch', 'OpenCV', 'NumPy', 'Scikit-learn'],
   },
   {
     title: 'Infrastructure',
-    icon: <FaCloud />,
-    skills: [
-      { name: 'Docker', icon: <SiDocker color="#2496ed" /> },
-      { name: 'Linux', icon: <SiLinux /> },
-      { name: 'Firebase', icon: <SiFirebase color="#ffca28" /> },
-      { name: 'PostgreSQL', icon: <SiPostgresql color="#336791" /> },
-    ]
-  }
+    icon: CloudCog,
+    skills: ['Docker', 'Linux', 'Firebase', 'PostgreSQL'],
+  },
 ];
 
 export default function About() {
@@ -74,64 +54,166 @@ export default function About() {
   };
 
   return (
-    <motion.div 
+    <motion.div
+      className="w-full space-y-6 lg:space-y-8"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      style={{ maxWidth: '900px', margin: '0 auto' }}
     >
-      <section className="about">
-        <motion.h1 variants={itemVariants}>About Me</motion.h1>
+      <SectionHeading
+        eyebrow="About Me"
+        title="Engineering at the intersection of intelligent systems and product quality."
+        description="I care about useful AI, strong backend foundations, and frontend interfaces that feel polished rather than improvised."
+      />
 
-        <motion.p variants={itemVariants}>
-          I&apos;m Charlie Chiu, a Master of Computer Science student at Texas
-          A&M University, specializing in AI-powered computer vision, scalable backend
-          systems, and full-stack product engineering.
-        </motion.p>
+      <div className="grid gap-6 lg:grid-cols-12">
+        <motion.div variants={itemVariants} className="lg:col-span-7">
+          <BentoPanel className="h-full rounded-[32px] p-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-600 dark:text-emerald-400">
+              <Sparkles className="h-4 w-4" />
+              Builder mindset
+            </div>
 
-        <motion.p variants={itemVariants}>
-          I build systems that bridge the gap between advanced models and real-world 
-          utility. My work ranges from optimizing PPE detection pipelines to architecting 
-          AI-driven automation platforms that solve practical business problems.
-        </motion.p>
-      </section>
+            <div className="mt-6 space-y-5 text-base leading-8 text-zinc-600 dark:text-zinc-400">
+              <p>
+                I&apos;m Charlie Chiu, a Master of Computer Science student at Texas A&amp;M
+                University focused on AI-powered computer vision, scalable backend
+                systems, and full-stack product engineering.
+              </p>
+              <p>
+                My best work usually sits between research depth and engineering
+                discipline: taking technically ambitious ideas and shaping them into
+                systems that can actually be deployed, maintained, and trusted.
+              </p>
+            </div>
 
-      <section className="skills-upgrade">
-        <motion.h2 variants={itemVariants} style={{ marginBottom: '2rem' }}>Technical Arsenal</motion.h2>
-        
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '1.5rem' 
-        }}>
-          {skillGroups.map((group) => (
-            <motion.div 
-              key={group.title} 
-              variants={itemVariants}
-              className="project-card" 
-              style={{ padding: '1.5rem' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem', color: 'var(--primary)' }}>
-                <span style={{ fontSize: '1.2rem' }}>{group.icon}</span>
-                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{group.title}</h3>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              <div className="rounded-3xl border border-zinc-200/80 bg-zinc-950 px-4 py-5 text-white dark:border-white/10 dark:bg-white/[0.06]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
+                  AI systems
+                </p>
+                <p className="mt-3 text-sm leading-7 text-zinc-200">
+                  Model pipelines, retrieval, evaluation loops, and computer vision workflows.
+                </p>
               </div>
-              
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {group.skills.map((skill) => (
-                  <div 
-                    key={skill.name} 
-                    className="tag"
-                    style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/80 px-4 py-5 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+                  Backend
+                </p>
+                <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
+                  APIs, data flows, background jobs, and pragmatic architecture.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/80 px-4 py-5 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+                  Frontend
+                </p>
+                <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
+                  Interfaces with hierarchy, intentional motion, and engineering-grade UX.
+                </p>
+              </div>
+            </div>
+          </BentoPanel>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="lg:col-span-5">
+          <BentoPanel className="h-full rounded-[32px] p-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
+                <Blocks className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold tracking-[-0.02em] text-zinc-950 dark:text-white">
+                  Technical Arsenal
+                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Compact capability widgets instead of generic category cards.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/80 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+                  Working principle
+                </p>
+                <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
+                  Strong systems are not only technically correct. They should also be
+                  legible, resilient, and pleasant to evolve.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/80 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+                  Sweet spot
+                </p>
+                <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
+                  Applied ML, data-backed product design, and full-stack builds with a clear UX layer.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/80 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+                  What I optimize for
+                </p>
+                <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
+                  Fast iteration without losing correctness, maintainability, or interface quality.
+                </p>
+              </div>
+            </div>
+          </BentoPanel>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="lg:col-span-12">
+          <BentoPanel className="rounded-[32px] p-8">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-400">
+                  Technical Arsenal
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-zinc-950 dark:text-white">
+                  Compact skill widgets with tighter hierarchy.
+                </h2>
+              </div>
+              <p className="max-w-2xl text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                The toolkit is grouped by how I think about systems in practice, not
+                by generic resume buckets.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+              {skillGroups.map((group) => {
+                const Icon = group.icon;
+
+                return (
+                  <div
+                    key={group.title}
+                    className="rounded-3xl border border-zinc-200/80 bg-white/80 p-4 dark:border-white/10 dark:bg-white/[0.04]"
                   >
-                    {skill.icon}
-                    <span>{skill.name}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <h3 className="text-sm font-semibold tracking-[-0.02em] text-zinc-950 dark:text-white">
+                        {group.title}
+                      </h3>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {group.skills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="inline-flex items-center rounded-full border border-zinc-200/80 bg-zinc-950/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+                );
+              })}
+            </div>
+          </BentoPanel>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }
