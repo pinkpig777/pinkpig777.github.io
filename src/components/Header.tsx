@@ -39,7 +39,12 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 pt-4">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="surface rounded-full px-3 py-3 sm:px-4">
+        <div
+          className={cn(
+            'surface px-3 py-3 sm:px-4 transition-[border-radius] duration-200',
+            isOpen ? 'rounded-[32px] lg:rounded-full' : 'rounded-full',
+          )}
+        >
           <div className="flex items-center justify-between gap-3">
             <Link
               to="/"
