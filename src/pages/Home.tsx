@@ -142,14 +142,14 @@ export default function Home() {
 
           <motion.div variants={itemVariants}>
             <BentoPanel className="grid gap-4 rounded-[32px] p-6 sm:grid-cols-2">
-              <div className="rounded-3xl border border-zinc-200/80 bg-zinc-950 px-4 py-5 text-white dark:border-white/10 dark:bg-white/[0.05]">
-                <div className="flex items-center gap-2 text-emerald-400">
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/70 px-4 py-5 dark:border-white/10 dark:bg-white/[0.03]">
+                <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-300">
                   <Cpu className="h-4 w-4" />
                   <span className="text-xs font-semibold uppercase tracking-[0.24em]">
                     Delivery
                   </span>
                 </div>
-                <p className="mt-4 text-sm leading-7 text-zinc-200">
+                <p className="mt-4 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
                   I care about moving from prototype to production without losing rigor.
                 </p>
               </div>

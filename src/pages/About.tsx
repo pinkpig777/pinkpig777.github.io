@@ -88,11 +88,11 @@ export default function About() {
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-3xl border border-zinc-200/80 bg-zinc-950 px-4 py-5 text-white dark:border-white/10 dark:bg-white/[0.06]">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
+              <div className="rounded-3xl border border-zinc-200/80 bg-white/80 px-4 py-5 dark:border-white/10 dark:bg-white/[0.04]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-600 dark:text-emerald-400">
                   AI systems
                 </p>
-                <p className="mt-3 text-sm leading-7 text-zinc-200">
+                <p className="mt-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
                   Model pipelines, retrieval, evaluation loops, and computer vision workflows.
                 </p>
               </div>
@@ -119,7 +119,7 @@ export default function About() {
         <motion.div variants={itemVariants} className="lg:col-span-5">
           <BentoPanel className="h-full rounded-[32px] p-8">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-zinc-200/80 bg-white/80 text-zinc-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-white">
                 <Blocks className="h-5 w-5" />
               </div>
               <div>
@@ -189,7 +189,7 @@ export default function About() {
                     className="rounded-3xl border border-zinc-200/80 bg-white/80 p-4 dark:border-white/10 dark:bg-white/[0.04]"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-zinc-200/80 bg-white/80 text-zinc-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-white">
                         <Icon className="h-4 w-4" />
                       </div>
                       <h3 className="text-sm font-semibold tracking-[-0.02em] text-zinc-950 dark:text-white">
