@@ -39,12 +39,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 pt-4">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div
-          className={cn(
-            'surface px-3 py-3 sm:px-4 transition-[border-radius] duration-200',
-            isOpen ? 'rounded-[32px] lg:rounded-full' : 'rounded-full',
-          )}
-        >
+        <div className="surface rounded-full px-3 py-3 sm:px-4">
           <div className="flex items-center justify-between gap-3">
             <Link
               to="/"
@@ -103,35 +98,35 @@ export default function Header() {
               </button>
             </div>
           </div>
-
-          <AnimatePresence>
-            {isOpen && (
-              <motion.nav
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-                className="mt-3 grid gap-2 border-t border-zinc-200/80 pt-3 lg:hidden dark:border-white/10"
-              >
-                {navigation.map((item) => (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    onClick={closeMenu}
-                    className={cn(
-                      'rounded-2xl px-4 py-3 text-sm font-medium transition',
-                      isActive(item.href)
-                        ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
-                        : 'text-zinc-600 hover:bg-zinc-950/[0.04] hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-white',
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </motion.nav>
-            )}
-          </AnimatePresence>
         </div>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.nav
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="surface mt-3 grid gap-2 rounded-[32px] p-3 lg:hidden"
+            >
+              {navigation.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={closeMenu}
+                  className={cn(
+                    'rounded-2xl px-4 py-3 text-sm font-medium transition',
+                    isActive(item.href)
+                      ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
+                      : 'text-zinc-600 hover:bg-zinc-950/[0.04] hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-white',
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
