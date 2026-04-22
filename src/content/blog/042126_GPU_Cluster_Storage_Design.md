@@ -2,14 +2,14 @@
 
 ## Overview
 
-This document captures the reasoning, design decisions, and implementation plan for setting up storage on a GPU server that initially serves as both a **login node** and a **compute node**, with future expansion into a multi-node cluster.
+This document captures the reasoning, design decisions, and implementation details for setting up storage on a GPU server that initially serves as both a **login node** and a **compute node**, with future expansion into a multi-node cluster.
 
-The goal is to design a storage layout that is:
+Instead of following a rigid "textbook" layout, we intentionally designed a system that balances:
 
-- Scalable
-- Maintainable
-- Fault-tolerant (to a reasonable extent)
-- Aligned with real-world ML/AI workloads
+- Performance
+- Flexibility
+- Operational simplicity
+- Future scalability
 
 ---
 
@@ -17,301 +17,401 @@ The goal is to design a storage layout that is:
 
 ## LVM (Logical Volume Manager)
 
-**Definition**  
-LVM is a storage abstraction layer that allows flexible allocation of disk space.
+LVM provides a flexible abstraction layer over physical storage:
 
-**Structure**
 ```
-Physical Disk → Physical Volume (PV) → Volume Group (VG) → Logical Volume (LV)
+Physical Disk → PV → VG → LV
 ```
 
-**Why LVM**
-- Flexible resizing (expand volumes easily)
-- Ability to pool multiple disks
-- Cleaner abstraction compared to fixed partitions
+It allows:
 
-**Trade-offs**
-- More complex than traditional partitioning
-- Requires understanding of PV / VG / LV layers
-- Filesystem limitations still apply (e.g., XFS cannot shrink)
+- Pooling storage into a single volume group
+- Dynamically allocating logical volumes
+- Future expansion by adding disks
+
+However:
+
+> LVM does not eliminate filesystem constraints (e.g., XFS cannot shrink)
 
 ---
 
 ## ext4
 
-**Definition**  
-ext4 is the default Linux filesystem, optimized for stability and general-purpose workloads.
+A general-purpose filesystem focused on:
 
-**Strengths**
-- Mature and widely supported
-- Reliable recovery tools (`fsck`)
-- Good performance for mixed workloads
-- Supports resizing (including shrinking, with effort)
+- Stability
+- Simplicity
+- Mature recovery tooling
 
-**Weaknesses**
-- Not optimized for very high-throughput large-file workloads
-- Can degrade under heavy parallel I/O compared to XFS
-
-**Best suited for**
+Best suited for:
 - System partitions
 - Conservative environments
-- General-purpose storage
 
 ---
 
 ## XFS
 
-**Definition**  
-XFS is a high-performance filesystem optimized for large files and parallel I/O.
+A high-performance filesystem designed for:
 
-**Strengths**
-- Excellent performance for large files
-- Scales well with concurrent workloads
-- Common in production servers and clusters
-- Works well with container workloads (Docker, ML pipelines)
+- Large files
+- High throughput
+- Parallel I/O workloads
 
-**Weaknesses**
-- Cannot shrink (practically)
-- Recovery tooling less familiar for many users
-- Requires more careful upfront planning
+Key characteristics:
 
-**Best suited for**
-- Dataset storage
-- Model storage
-- Scratch / temporary workloads
-- Container storage
+- Excellent for data-intensive systems
+- Widely used in production clusters
+- Supports project quota (pquota)
+
+Limitations:
+
+- Cannot shrink volumes
+- Requires more deliberate planning
 
 ---
 
-## Cluster Storage Considerations
+## Project Quota (pquota)
 
-In a cluster environment, storage is typically divided into:
+XFS provides **project-based quota**, which allows limiting disk usage at the directory level.
 
-### Persistent Storage (`/data`)
-- Long-term data
-- Models, datasets, shared resources
-- Should not be casually deleted
+Unlike traditional user/group quota:
 
-### Ephemeral Storage (`/scratch`)
-- Temporary computation data
-- Intermediate outputs, checkpoints, cache
-- Safe to delete when full
-
-### System Storage (`/`)
-- OS and critical services
-- Must remain stable and isolated
+- Applies to directory trees
+- Suitable for workload isolation (e.g., `/data` vs `/scratch`)
 
 ---
 
-# Design Requirements
+# Problem Context
 
-Given constraints:
+We are working with:
 
-- Total disk: ~2TB
-- Root already allocated: 200GB (LVM)
-- Remaining: ~1.8TB
-- Node role:
-  - Login node (interactive usage)
-  - Compute node (jobs, training, inference)
-- Future:
-  - Additional compute nodes will be added
-  - Storage scaling will be done via new disks or NAS (not shrinking partitions)
+- ~2TB local NVMe storage
+- 200GB already allocated for system (`/`)
+- ~1.8TB remaining
 
----
+Node role:
 
-# Storage Design Options Considered
+- Login node (interactive usage)
+- Compute node (jobs, experiments)
 
-## Option 1: Single Partition (All-in-One)
+Future direction:
 
-```
-/data (everything)
-```
-
-**Rejected because**
-- No isolation between workloads
-- High risk of disk exhaustion affecting all services
-- Difficult to manage and clean
+- Expand into multi-node cluster
+- Add storage via SSD or NAS
+- Avoid reliance on resizing/shrinking partitions
 
 ---
 
-## Option 2: Split by Directory Only
+# Design Options Considered
+
+## Option 1: Hard Partition / LVM Split
 
 ```
-/data/models
-/data/tmp
-/data/cache
+/data
+/scratch
 ```
 
-**Rejected because**
-- No hard isolation
-- One workload can consume all space
-- Operational risk in multi-user environments
+Separate logical volumes for:
+
+- Persistent data
+- Temporary data
+
+### Pros
+- Strong isolation
+- Easy observability (`df -h`)
+- Clear mental model
+
+### Cons
+- Requires early capacity decisions
+- XFS cannot shrink → misallocation is costly
+- Less flexible during early-stage usage
 
 ---
 
-## Option 3: Partition Separation (Chosen Approach)
+## Option 2: Directory-based Separation Only
 
 ```
-/        → system
-/data    → persistent data
-/scratch → temporary data
+/data
+/data/scratch
 ```
 
-**Why this works**
-- Clear separation of concerns
-- Failure isolation
-- Matches cluster best practices
+### Pros
+- Simple
+- No upfront partitioning decisions
+
+### Cons
+- No isolation
+- High risk of disk exhaustion
+- Not suitable for multi-user environments
 
 ---
 
-# Filesystem Decision
+## Option 3: Single XFS + Project Quota (**Chosen**)
 
-## Initial Debate
+```
+/data
+/data/persistent
+/data/scratch
+```
 
-Should `/data` use:
-- ext4 (safe)
-- or XFS (performance-oriented)?
+Use:
 
-## Key Considerations
+- XFS as the underlying filesystem
+- Project quota (pquota) to enforce limits
 
-### 1. Workload Characteristics
-- Large files (models, datasets)
-- High I/O throughput
-- Container-heavy (Docker, vLLM)
-- Multi-user environment
+---
 
-### 2. Operational Strategy
+# Decision Trade-offs
+
+This decision is fundamentally a trade-off between:
+
+### 1. Isolation vs Flexibility
+
+| Approach             | Isolation | Flexibility |
+|---------------------|----------|------------|
+| Partition split     | Strong   | Low        |
+| XFS + pquota        | Medium   | High       |
+
+We chose **flexibility** because:
+
+- Early-stage workload is uncertain
+- Data vs scratch usage ratio may evolve
+- Repartitioning later is costly
+
+---
+
+### 2. Operational Safety vs Adaptability
+
+Partition-based design:
+
+- Safer by default
+- Enforced by the OS
+
+Quota-based design:
+
+- Requires correct configuration
+- Depends on operational discipline
+
+We accepted this trade-off because:
+
+> Our system is still evolving, and adaptability is more valuable than strict enforcement at this stage.
+
+---
+
+### 3. Observability vs Control
+
+Partition split:
+
+```
+df -h
+```
+
+→ Immediate visibility
+
+Quota-based:
+
+```
+xfs_quota -x -c "report"
+```
+
+→ Requires tooling
+
+We accept slightly reduced observability in exchange for:
+
+- Dynamic capacity management
+- Avoiding premature optimization
+
+---
+
+### 4. Production Convention vs Practical Engineering
+
+Typical production clusters use:
+
+```
+/data
+/scratch
+```
+
+Separate mount points.
+
+We intentionally diverge because:
+
+- This is an early-stage system
+- We prioritize iteration speed over convention
+- We plan to evolve toward stricter isolation later if needed
+
+---
+
+# Decision Rationale
+
+We chose **XFS + project quota** based on the following reasoning:
+
+---
+
+## 1. Workload is large-file and throughput-heavy
+
+The system handles:
+
+- Models (GB–TB scale)
+- Datasets
+- Checkpoints
+- Container layers
+
+XFS is well-suited for:
+
+- Sequential I/O
+- Large file handling
+- High throughput operations
+
+---
+
+## 2. Need for dynamic capacity allocation
+
+We do not yet know:
+
+- Exact ratio of persistent vs temporary data
+- Future workload patterns
+
+Using pquota allows:
+
+- Adjusting limits without repartitioning
+- Avoiding irreversible decisions
+
+---
+
+## 3. Scaling strategy does not depend on shrinking
+
+We explicitly decided:
+
 - No reliance on shrinking volumes
-- Future scaling via:
-  - Additional SSDs
-  - NAS integration
+- Scaling will be done by:
+  - Adding SSDs
+  - Integrating NAS
 
-### 3. Trade-off Decision
-
-| Factor              | ext4            | XFS                         |
-|-------------------|----------------|------------------------------|
-| Stability          | High           | High                         |
-| Performance        | Good           | Better for large I/O         |
-| Resize (shrink)    | Possible       | Not supported                |
-| Operational risk   | Lower          | Slightly higher              |
+This removes a key disadvantage of XFS.
 
 ---
 
-# Final Decision
+## 4. Early-stage system prioritizes iteration
 
-## Filesystem Layout
+At this stage:
 
-```
-/            → ext4 (200GB, LVM)
-/data        → XFS (~1.1TB, LVM)
-/scratch     → XFS (~700GB, LVM)
-```
+- Requirements are evolving
+- Usage patterns are not fully stable
 
-## Why this layout
+We optimize for:
 
-### `/` (system, ext4)
-- Stability is critical
-- Minimal performance requirement
-- Easier recovery
-
-### `/data` (XFS)
-- Stores large, persistent data
-- Optimized for throughput
-- Matches workload characteristics
-
-### `/scratch` (XFS)
-- High write/delete frequency
-- Temporary workloads
-- Performance preferred over recoverability
+> Speed of iteration over rigid correctness
 
 ---
 
-# LVM Layout
+## 5. Acceptable level of risk
+
+We acknowledge:
+
+- Quota is not as strong as partition isolation
+- Misconfiguration is possible
+
+But we mitigate this by:
+
+- Clear directory structure
+- Explicit usage guidelines
+- Monitoring and documentation
+
+---
+
+# Final Layout
 
 ```
-Disk (~2TB)
- └── PV
-      └── VG (vg_cluster)
-           ├── LV root      → 200G → ext4
-           ├── LV data      → ~1.1T → xfs
-           └── LV scratch   → ~700G → xfs
+/            → ext4 (system)
+/data        → XFS
+  /persistent
+  /scratch
 ```
+
+Quota is enforced via:
+
+- XFS project quota
+- Separate limits for persistent and scratch
 
 ---
 
 # Operational Guidelines
 
-## Docker
+## Directory Usage
 
-Move Docker data root to:
+### Persistent Data
 ```
-/data/docker
+/data/persistent
 ```
 
-Reason:
-- Avoid filling system partition
-- Docker images and layers grow quickly
-
----
-
-## Workload Placement
-
-### `/data`
 - models
 - datasets
-- docker storage
-- logs
+- repositories
 - shared artifacts
-
-### `/scratch`
-- temporary outputs
-- checkpoints
-- build artifacts
-- cache
-- job runtime files
+- Docker root
 
 ---
 
-## Slurm Job Example
+### Temporary Data
+```
+/data/scratch
+```
+
+- checkpoints
+- cache
+- build artifacts
+- intermediate outputs
+
+---
+
+## Slurm Example
 
 ```bash
-export TMPDIR=/scratch/$USER/$SLURM_JOB_ID
+export TMPDIR=/data/scratch/$USER/$SLURM_JOB_ID
 mkdir -p $TMPDIR
 ```
 
 ---
 
-# Scaling Strategy
+## Docker
 
-Future expansion will not rely on resizing existing volumes.
+Docker root should be moved to:
 
-Instead:
+```
+/data/persistent/docker
+```
 
-- Add new SSDs → extend LVM or mount separately
-- Integrate NAS → mount shared storage
-- Separate roles:
-  - compute nodes (heavy workloads)
-  - login node (lightweight usage)
+---
+
+# Future Evolution
+
+This design is not final.
+
+Possible future changes:
+
+- Split `/data` and `/scratch` into separate volumes
+- Introduce network storage (NAS / distributed FS)
+- Move heavy workloads to dedicated compute nodes
 
 ---
 
 # Lessons Learned
 
-1. Partition separation matters more than filesystem choice  
-2. Workload-driven design is more important than theoretical performance  
-3. XFS is appropriate when scaling strategy avoids shrink operations  
-4. Docker must not live on the system partition  
-5. Cluster thinking requires failure isolation, not just performance  
+1. Storage design is about trade-offs, not absolutes  
+2. Filesystem choice must match workload characteristics  
+3. Early-stage systems benefit from flexibility  
+4. Isolation can be introduced later, but rigidity is hard to undo  
+5. Production design evolves — it is not fixed from day one  
 
 ---
 
 # Conclusion
 
-This design balances:
+We chose **XFS + project quota** because it provides:
 
-- Stability (`ext4` for system)
-- Performance (`XFS` for data and scratch)
-- Flexibility (LVM)
-- Scalability (future storage expansion)
+- High performance for data-heavy workloads
+- Flexibility during early-stage development
+- A balance between structure and adaptability
 
-It is not the simplest setup, but it reflects a production-oriented mindset aligned with modern ML infrastructure.
+> Instead of optimizing for a perfect final state, we optimized for a system that can evolve.
