@@ -7,6 +7,7 @@ import Contact from './pages/Contact';
 import Experience from './pages/Experience';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="blog/:slug" element={<BlogPost />} />
         <Route path="contact" element={<Contact />} />
         <Route path="experience" element={<Experience />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

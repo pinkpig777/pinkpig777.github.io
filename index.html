@@ -3,6 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <script>
+      (function (location) {
+        if (location.search[1] !== '/') return;
+
+        const decodedPath = location.search
+          .slice(1)
+          .split('&')
+          .map((segment) => segment.replace(/~and~/g, '&'))
+          .join('?');
+
+        window.history.replaceState(null, '', `${location.pathname.slice(0, -1)}${decodedPath}${location.hash}`);
+      })(window.location);
+    </script>
     <meta name="description" content="Charlie Chiu — AI-driven software engineer specializing in computer vision, backend systems, and real-world engineering problems." />
     <meta name="keywords" content="Charlie Chiu, portfolio, AI, computer vision, software engineer, full stack" />
     <meta name="author" content="Charlie Chiu" />
