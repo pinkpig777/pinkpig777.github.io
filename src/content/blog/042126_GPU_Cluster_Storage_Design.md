@@ -284,10 +284,11 @@ Using pquota allows:
 We explicitly decided:
 
 - No reliance on shrinking volumes
+
 - Scaling will be done by:
   - Adding SSDs
   - Integrating NAS
-
+  
 This removes a key disadvantage of XFS.
 
 ---
