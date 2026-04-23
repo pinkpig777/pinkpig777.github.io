@@ -24,6 +24,51 @@ const markdownProcessor = unified()
   .use(remarkMath)
   .use(remarkRehype, { allowDangerousHtml: true })
   .use(rehypeKatex)
+  .use(() => (tree) => {
+    const visit = (node, parent = null, index = -1) => {
+      if (!node || typeof node !== 'object') return;
+
+      if (
+        parent &&
+        parent.type === 'element' &&
+        parent.tagName === 'pre' &&
+        node.type === 'element' &&
+        node.tagName === 'code'
+      ) {
+        const classNames = Array.isArray(node.properties?.className)
+          ? node.properties.className
+          : [];
+        if (classNames.includes('language-mermaid')) {
+          const text = Array.isArray(node.children)
+            ? node.children
+                .filter((child) => child.type === 'text')
+                .map((child) => child.value)
+                .join('')
+            : '';
+
+          parent.tagName = 'div';
+          parent.properties = {
+            className: ['mermaid'],
+          };
+          parent.children = [
+            {
+              type: 'text',
+              value: text,
+            },
+          ];
+          return;
+        }
+      }
+
+      if (Array.isArray(node.children)) {
+        node.children.forEach((child, childIndex) => {
+          visit(child, node, childIndex);
+        });
+      }
+    };
+
+    visit(tree);
+  })
   .use(rehypeHighlight, { detect: true, ignoreMissing: true })
   .use(rehypeStringify, { allowDangerousHtml: true });
 

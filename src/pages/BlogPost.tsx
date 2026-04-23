@@ -1,12 +1,36 @@
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import mermaid from 'mermaid';
 import { blogPostBySlug } from '../generated/blog';
 import { formatBlogDate } from '../utils/blog';
 import BentoPanel from '../components/BentoPanel';
 import { ArrowLeft } from 'lucide-react';
+import { useTheme } from '../context/useTheme';
 
 export default function BlogPost() {
   const { slug } = useParams();
   const post = slug ? blogPostBySlug[slug] : undefined;
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    if (!post) return;
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'loose',
+      theme: theme === 'dark' ? 'dark' : 'default',
+    });
+
+    const nodes = document.querySelectorAll<HTMLElement>('.blog-content .mermaid');
+    nodes.forEach((node) => {
+      node.removeAttribute('data-processed');
+      node.innerHTML = node.textContent ?? '';
+    });
+
+    void mermaid.run({
+      nodes: Array.from(nodes),
+    });
+  }, [post, theme]);
 
   if (!post) {
     return (

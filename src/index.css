@@ -81,6 +81,7 @@
   .blog-content ol,
   .blog-content blockquote,
   .blog-content pre,
+  .blog-content .mermaid,
   .blog-content table {
     @apply mt-5;
   }
@@ -88,6 +89,14 @@
   .blog-content ul,
   .blog-content ol {
     @apply space-y-2 pl-6;
+  }
+
+  .blog-content ul {
+    list-style-type: disc;
+  }
+
+  .blog-content ol {
+    list-style-type: decimal;
   }
 
   .blog-content li::marker {
@@ -116,6 +125,14 @@
 
   .blog-content pre {
     @apply overflow-x-auto rounded-3xl border border-zinc-200 bg-zinc-950 px-5 py-4 text-sm text-zinc-100 dark:border-white/10;
+  }
+
+  .blog-content .mermaid {
+    @apply overflow-x-auto rounded-3xl border border-zinc-200 bg-white px-5 py-4 dark:border-white/10 dark:bg-zinc-950;
+  }
+
+  .blog-content .mermaid svg {
+    @apply h-auto max-w-none;
   }
 
   .blog-content pre code {
