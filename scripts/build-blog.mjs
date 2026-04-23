@@ -29,6 +29,17 @@ const markdownProcessor = unified()
       if (!node || typeof node !== 'object') return;
 
       if (
+        node.type === 'element' &&
+        node.tagName === 'a'
+      ) {
+        node.properties = {
+          ...node.properties,
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        };
+      }
+
+      if (
         parent &&
         parent.type === 'element' &&
         parent.tagName === 'pre' &&

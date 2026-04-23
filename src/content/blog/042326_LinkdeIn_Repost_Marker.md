@@ -1,5 +1,8 @@
 # Building a LinkedIn Reposted Marker Extension: DOM Detection, Background Prefetch, and Defensive Browser Engineering
 
+## [GitHub Link](https://github.com/pinkpig777/reposted-marker)
+
+
 ## Introduction
 
 Most browser extensions look simple from the outside and messy from the inside.
