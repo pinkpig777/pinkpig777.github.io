@@ -21,7 +21,7 @@
     ],
     "tags":["Python","PyTorch","Diffusion Models", "StyleGAN2","Transformers"],
     "category":"AI/ML",
-    "link":"https://arxiv.org/abs/2404.12345",
+    "link":"https://arxiv.org/abs/2412.10785",
     "description":[
       "Proposed Style Latent Diffusion Transformer (DiT), a novel architecture combining latent diffusion models with transformer-based attention mechanisms for enhanced face synthesis.",
       "Achieved state-of-the-art results on multiple benchmarks, demonstrating superior fidelity and diversity in generated images across various demographics."
@@ -55,6 +55,29 @@
       "Designed and built a real-time system to detect toxic messages using sentiment analysis, leading a team of 4 engineers.",
       "Fine-tuned a pre-trained Chinese BERT model on a custom dataset of chat logs, achieving 87% accuracy and increasing toxic message classification AUC by 36%.",
       "Engineered a full-stack solution with a Python backend and WebSocket-based frontend alerts, enabling users to take immediate action on flagged content."
+    ]
+  },
+  {
+    "id": "reposted-marker",
+    "title": "Reposted Marker - LinkedIn Job Screening Extension",
+    "context": [
+      "Chrome/Edge browser extension that detects reposted LinkedIn job listings and surfaces the signal directly in the jobs list before users waste time opening low-value posts."
+    ],
+    "tags": [
+      "JavaScript",
+      "Chrome Extension",
+      "Manifest V3",
+      "DOM Parsing",
+      "Background Service Worker",
+      "chrome.storage.local"
+    ],
+    "category": "Full Stack",
+    "link": "https://github.com/pinkpig777/reposted-marker",
+    "description": [
+      "Built a Manifest V3 browser extension that highlights reposted LinkedIn jobs in both the left-side results list and the right-side detail panel, with badge-based UI cues and resilient DOM detection.",
+      "Designed a hybrid detection system combining visible-page parsing, job ID extraction, local cache reuse, and background prefetch so unresolved jobs can be classified asynchronously before users click into them.",
+      "Implemented a bounded priority queue with viewport-aware prefetch windowing, rate-limit backoff, retry control, and cache policy coordination to keep the extension responsive while avoiding excessive LinkedIn requests.",
+      "Added a popup control menu with live runtime settings, queue/cache diagnostics, rescan and cache-clear actions, and exportable debug logs to support both end users and maintainability."
     ]
   },
   {
