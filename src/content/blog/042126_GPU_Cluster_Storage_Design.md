@@ -1,4 +1,13 @@
-# Storage Design for a Hybrid Login + Compute Node (Cluster Setup)
+---
+title: Storage Design for a Hybrid Login + Compute Node
+date: 2026-04-21
+tags:
+  - Infrastructure
+  - Storage
+  - GPU Cluster
+summary: Trade-offs behind using ext4, XFS, LVM, and project quotas for a hybrid login and compute node with room to grow into a cluster.
+slug: gpu-cluster-storage-design
+---
 
 ## Overview
 

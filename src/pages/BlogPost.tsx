@@ -23,8 +23,10 @@ export default function BlogPost() {
 
     const nodes = document.querySelectorAll<HTMLElement>('.blog-content .mermaid');
     nodes.forEach((node) => {
+      const originalSource = node.dataset.mermaidSource ?? node.textContent ?? '';
+      node.dataset.mermaidSource = originalSource;
       node.removeAttribute('data-processed');
-      node.innerHTML = node.textContent ?? '';
+      node.textContent = originalSource;
     });
 
     void mermaid.run({

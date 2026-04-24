@@ -60,7 +60,7 @@ export default function Blog() {
                 <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
                   <time dateTime={post.date}>{formatBlogDate(post.date)}</time>
                   <span className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                  <span>{post.tags.length > 0 ? `${post.tags.length} tags` : 'General note'}</span>
+                  <span>{post.tags.length > 0 ? post.tags[0] : 'General note'}</span>
                 </div>
                 {post.tags.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
