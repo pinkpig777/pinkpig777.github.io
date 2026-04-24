@@ -4,7 +4,7 @@ date: 2026-04-23
 tags:
   - Browser Extension
   - LinkedIn
-summary: Detect reposted jobs, prefetch unresolved listings, and keep LinkedIn highlights stable across route changes and rerenders.
+summary: Detect reposted jobs on LinkedIn and keep highlights stable across route changes and rerenders.
 slug: linkedin-reposted-marker
 ---
 
@@ -12,453 +12,157 @@ slug: linkedin-reposted-marker
 
 ## Introduction
 
-Most browser extensions look simple from the outside.
+**LinkedIn Reposted Marker** is a small browser extension I built to solve a simple problem:
 
-Then you open the codebase and realize the browser is basically a haunted house with event listeners.
+> I wanted to know whether a LinkedIn job was reposted before spending time opening it.
 
-**LinkedIn Reposted Marker** started with a simple goal: help users identify reposted LinkedIn jobs directly from the jobs list, before they waste time clicking into each post.
+At first, this sounded like an easy DOM-highlighting project. Find the word `Reposted`, mark the job card, done.
 
-The idea is straightforward:
+Naturally, it was not that simple.
 
-> If a job is reposted, show that signal earlier.
+LinkedIn is a dynamic single-page app. Job cards rerender, routes change without full page reloads, and useful signals are not always visible in the left-side job list. A simple highlighter would work sometimes, then quietly fail in all the annoying edge cases where users actually need it.
 
-But building that reliably was not just a matter of finding the word `Reposted`.
+So the project became less about matching text and more about building a small, stable extension system.
 
-LinkedIn is a dynamic single-page app. The page changes while you scroll, cards rerender, routes change without full reloads, and useful information sometimes appears only in the detail panel after a job is opened.
+## The Core Problem
 
-So this small extension slowly turned into a real browser-extension engineering problem:
+The useful reposted signal often appears after opening a job, but the user needs that information earlier.
 
-- detect reposted jobs from visible DOM when possible
-- connect detail-panel signals back to the correct list card
-- prefetch unresolved jobs in the background
-- avoid sending too many requests
-- keep highlights stable across scrolls, route changes, and rerenders
-- give the user enough controls and diagnostics to understand what is happening
+That created three main goals:
 
-This post walks through how the extension is designed, why the architecture ended up this way, and what I learned from making it reliable enough to use.
+1. detect reposted jobs when the text is already visible
+2. connect detected status back to the correct job card
+3. keep the marker stable while LinkedIn rerenders the page
 
-## The Product Problem
+The extension currently supports `/jobs/search/`.
 
-The core user problem is simple:
+It does **not** support `/jobs/search-results/`, because that route behaves differently and is less reliable for the current implementation.
 
-> “Can I know this job is reposted before I spend attention opening it?”
+## Architecture
 
-LinkedIn may show the reposted signal inside the job detail panel, but by that point the user has already clicked.
+The extension has four main parts:
 
-That is too late.
+- **Content script** scans LinkedIn job pages, detects reposted signals, extracts job IDs, and applies markers.
+- **Background worker** handles optional background prefetching for unresolved jobs.
+- **Shared policy layer** keeps route support, cache rules, timing constants, and validation logic consistent.
+- **Popup menu** gives the user controls for enabling behavior, tuning prefetch, clearing cache, and exporting debug logs.
 
-A basic extension could highlight reposted text if it is already visible in the left-side job list. That is useful, but limited. A better version needs to do more:
+The key design decision was to make DOM detection the foundation.
 
-1. detect reposted status from visible job cards
-2. detect status from the opened job detail panel
-3. map the detail-panel result back to the correct left-side card
-4. prefetch unresolved jobs in the background
-5. keep the UI stable while LinkedIn constantly mutates the page, because apparently static HTML was too peaceful for humanity
+Background prefetch improves coverage, but it does not replace visible-page detection. That way, the extension still works even if prefetch is disabled, paused, or rate-limited.
 
-That product need shaped the whole architecture.
+## Why Job Identity Matters
 
-## High-Level Architecture
+The most important internal concept is the `jobId`.
 
-The extension has four main runtime pieces:
+Once each job card can be mapped to a stable ID, the extension can:
 
-1. **Content runtime**
+- cache results
+- avoid duplicate background requests
+- reapply markers after rerenders
+- connect detail-panel detection back to the left-side card
+- prevent marking the wrong job
 
-   This runs directly on supported LinkedIn jobs pages. It scans job cards, extracts job IDs, detects visible reposted signals, and applies visual markers to both the left-side list and the right-side detail panel.
+This sounds boring, but it is the backbone of the whole extension. Without stable identity, the system becomes guesswork with CSS.
 
-2. **Background worker**
+The extension extracts job IDs from several places, including URL paths, query parameters, and DOM attributes, because LinkedIn does not expose job identity in one perfectly consistent way.
 
-   This handles async prefetching. When the content script finds unresolved jobs, it can ask the background worker to fetch and classify those jobs without blocking the page.
+Very thoughtful of them.
 
-3. **Shared policy layer**
+## Handling LinkedIn’s Dynamic Page
 
-   This centralizes route support, payload validation, cache rules, timing constants, and debug behavior. Without this layer, content and background logic would slowly drift apart, because duplicated logic always finds a way to embarrass you later.
+The hardest part was making the extension survive LinkedIn’s constant page changes.
 
-4. **Popup control menu**
-
-   This gives the user runtime controls and diagnostics: enable/disable behavior, prefetch tuning, cache TTL, queue state, cache clearing, and debug log export.
-
-The runtime flow looks like this:
-
-```mermaid
-flowchart LR
-  A["LinkedIn Jobs Page"] --> B["Extension Content Runtime"]
-  B --> C["Visible DOM Detection"]
-  B --> D["Background Prefetch for Unresolved Jobs"]
-
-  D --> E["Background Worker"]
-  E --> F["Fetch and Classify Job Status"]
-  E --> G["Cache Results"]
-
-  G --> H["Return Results to Content Runtime"]
-  H --> I["Highlight List Cards and Detail Panel"]
-
-  J["Popup Control Menu"] --> K["Settings and Diagnostics"]
-  K --> B
-  K --> E
-  K --> G
-```
-
-The important design decision is this:
-
-> Background prefetch should improve DOM detection, not replace it.
-
-That means the extension still works even if prefetch is disabled, paused, rate-limited, or temporarily unavailable.
-
-## Why I Started with DOM Detection
-
-The most tempting path was to start with background fetching first.
-
-That would have been the fun, over-engineered version. Naturally, also the wrong starting point.
-
-The right starting point was visible DOM detection.
-
-There were three reasons.
-
-First, it validated the product quickly. If marking reposted jobs in the list was not actually useful, there was no point building a bigger system around it.
-
-Second, it forced me to solve the basic page-mapping problem. Before doing async work, the extension needed to understand what a job card is, how to find it, how to extract its identity, and how to update it later.
-
-Third, DOM detection gave the extension a fallback path. Background prefetch depends on network behavior, route support, cache state, and rate limits. DOM detection is cheaper, faster, and less fragile.
-
-So the project evolved in layers:
-
-1. visible detection
-2. stable job identity
-3. cache and registry
-4. background prefetch
-5. queue control
-6. popup controls and debug logging
-
-That order mattered.
-
-## The Real Difficulty: LinkedIn Is Not a Stable Document
-
-The hard part was not checking whether text includes `Reposted`.
-
-The hard part was dealing with LinkedIn as a moving application instead of a static webpage.
-
-The extension has to survive:
+The content script needs to handle:
 
 - infinite scroll
 - async DOM insertion
 - rerendered job cards
-- route changes without full page reloads
-- different job page variants
-- detail panels that do not always expose identity cleanly
+- route changes without full reloads
+- selected job changes in the detail panel
 
-To handle that, the content runtime uses:
+To deal with this, the extension uses a debounced `MutationObserver`, scroll-based rescanning, route polling, extension-owned data attributes, and a registry of known cards.
 
-- a debounced `MutationObserver`
-- scroll-driven rescanning
-- route polling
-- extension-owned data attributes
-- a card registry keyed by job ID
-- careful separation between list cards and detail-panel DOM
+Without these pieces, the marker would flicker, disappear, duplicate itself, or attach to the wrong element. All excellent ways to make a browser extension feel cursed.
 
-Without those pieces, the extension would either miss updates or keep applying the same work again and again.
+## Background Prefetch
 
-That usually leads to flicker, stale markers, duplicate tags, or all the tiny UI disasters that make users uninstall things with impressive speed.
+Background prefetch helps the extension classify jobs that do not already show reposted text in the visible list.
 
-## Job Identity Is the Backbone
+But prefetching also creates risk. Too many requests can trigger rate limits, especially HTTP `429 Too Many Requests`.
 
-Once the extension moved beyond visible DOM detection, job identity became the most important internal primitive.
+So the extension treats prefetching as a controlled subsystem, not a free-for-all:
 
-If a job can be represented by a stable `jobId`, then the extension can:
-
-- cache results
-- deduplicate background requests
-- reapply status after rerenders
-- connect detail-panel detection back to the left-side list
-- resolve async background results against the correct card
-- avoid marking the wrong job
-
-The extension extracts job IDs from multiple sources because LinkedIn does not always expose them consistently:
-
-- `/jobs/view/<id>` URL paths
-- `currentJobId` query parameters
-- DOM attributes
-- URN-like fields
-- selected-card structures
-
-This mattered during route investigation, especially when comparing supported `/jobs/search/` behavior with unsupported route variants where URL shape and selected-card behavior differ.
-
-The main lesson was simple:
-
-> If the identity layer is weak, everything above it becomes guesswork.
-
-And guesswork is not architecture. It is just hope wearing a hoodie.
-
-## Background Prefetch: Helpful, but Risky
-
-Background prefetch is what makes the extension more than a simple highlighter.
-
-It lets the extension improve the left-side job list over time by fetching unresolved jobs in the background and classifying their reposted status.
-
-But it also introduces the biggest operational risk:
-
-> too many requests.
-
-In practice, that showed up through HTTP `429 Too Many Requests` responses.
-
-The fix was not just slowing everything down randomly. The extension needed an actual queue and retry model:
-
-- bounded pending queue
+- bounded queue
 - configurable concurrency
-- minimum interval between requests
+- minimum delay between requests
 - pause window after rate limiting
-- cooldowns for `error` and `rate_limited` states
-- cache reuse before new fetches
+- cache reuse before fetching again
 - viewport-aware candidate selection
-- stale-result refresh only when it is worth it
 
-This changed prefetch from a reckless fire-and-forget feature into a controlled subsystem.
+This keeps the extension useful without aggressively fetching every job on the page like a raccoon loose in a data center.
 
-The real engineering question was not:
+## Popup and Debugging
 
-> “Can we fetch unresolved jobs?”
+The popup is more than a settings menu. It also gives visibility into what the extension is doing.
 
-It was:
+It includes controls for:
 
-> “Can we fetch them predictably without annoying LinkedIn, the browser, or the user?”
+- enabling or disabling the extension
+- toggling background prefetch
+- changing prefetch settings
+- viewing route support state
+- clearing cache
+- exporting debug logs
 
-Small distinction. Large consequences.
+The debug log became surprisingly important. Once the extension had content scripts, background workers, browser storage, queues, and popup state, `console.log` was no longer enough.
 
-## Viewport Windowing and Queue Control
+A local exportable log makes it much easier to understand why a job was marked, skipped, cached, rate-limited, or ignored.
 
-Once prefetch worked, the next problem was deciding what should be prefetched.
+## The Hardest Bugs
 
-A long LinkedIn jobs page can contain many unresolved cards. Queueing all of them immediately would technically work, but it would be wasteful and fragile.
-
-Most of those jobs may never enter the user’s attention.
-
-So the extension uses a viewport-aware model:
-
-- only queue jobs near the current viewport
-- score candidates by distance from the viewport
-- prioritize closer cards first
-- cap the maximum pending queue size
-- reuse cached results aggressively
-- refresh stale cached results only for nearby jobs
-
-This makes the extension behave more like a small scheduler than a simple DOM script.
-
-It is not just asking:
-
-> “Which jobs are unresolved?”
-
-It is asking:
-
-> “Which unresolved jobs are worth spending background budget on right now?”
-
-That distinction makes the extension much more stable.
-
-## Route Support: Saying No Improves Reliability
-
-One of the better decisions was to make route support explicit.
-
-The extension does not pretend every LinkedIn Jobs page works the same way. It centralizes route validation in a shared contracts layer and gates unsupported routes instead of silently misbehaving.
-
-Currently, the main supported route is:
-
-- `/jobs/search/`
-
-The extension intentionally does not support `/jobs/search-results/` because its selected-card behavior and URL patterns are less reliable for this implementation.
-
-This is the kind of detail that sounds boring until you debug a browser extension at midnight and realize half your bugs come from pages you never meant to support.
-
-The better behavior is:
-
-1. define supported routes clearly
-2. enforce the same support contract in content and background code
-3. show support state in the popup
-4. fail visibly instead of pretending everything is fine
-
-That makes bugs easier to reason about and prevents the extension from becoming a pile of lucky assumptions.
-
-## Popup Controls and Runtime Introspection
-
-The popup is not just a settings menu.
-
-It is also a small operator console.
-
-It exposes:
-
-- extension enable/disable
-- background prefetch toggle
-- left-list marking toggle
-- detail-panel marking toggle
-- prefetch window size
-- prefetch concurrency
-- cache TTL
-- route support state
-- queue state
-- cache state
-- cache clearing
-- debug log export
-
-This helps in two ways.
-
-First, users can tune how aggressive the extension should be.
-
-Second, the system becomes diagnosable. That matters because browser extensions have multiple runtime contexts:
-
-- content script
-- background worker
-- popup
-- browser storage
-- target page DOM
-
-When something goes wrong, the reason may live in any of those places, because apparently one runtime context was not enough suffering.
-
-## Debug Logging Became a Product Feature
-
-At first, normal `console.log` debugging was enough.
-
-Then the system grew.
-
-Once prefetching, queue policy, cache state, route support, and popup controls were all interacting, DevTools logs were not enough anymore.
-
-So the extension added a shared debug log that stores useful runtime events locally and allows exporting them as JSON from the popup.
-
-The log captures things like:
-
-- settings changes
-- content runtime initialization
-- route support decisions
-- queue enqueue, release, and drop behavior
-- fetch completion
-- rate-limit events
-- status result delivery back to the content runtime
-
-This sounds like internal tooling, but for a browser extension it becomes part of the product quality.
-
-If a user says, “This job did not update,” a durable local event trail is much better than asking them to recreate the issue while DevTools is open.
-
-Nobody wants that. Not even the browser.
-
-## The Hardest Bugs Were Mapping Bugs
-
-The most persistent bugs were not styling bugs.
+The hardest bugs were not visual styling bugs.
 
 They were mapping bugs.
 
 A common failure looked like this:
 
-1. the right-side detail panel correctly showed a reposted signal
-2. the extension detected it
-3. the left-side job card should have been updated
-4. but the extension could not confidently map the detail result back to the correct card
+1. the detail panel showed a reposted signal
+2. the extension detected it correctly
+3. the matching left-side card needed to be updated
+4. but the extension could not confidently map the detail result back to the right card
 
-That led to several hardening steps:
+That led to stronger job ID extraction, stricter route support, better card registry logic, and clearer fallback behavior.
 
-- extract job IDs from multiple sources
-- explicitly gate unsupported route families such as `search-results`
-- avoid relying on selected-card heuristics for unsupported routes
-- fall back to title and company matching when job ID mapping is weak
-- avoid accidentally treating detail-panel elements as list cards
-- maintain a registry of known cards by job ID
+The lesson was simple:
 
-The lesson here is important:
+> Detecting the signal is only half the problem. Applying it to the right place is the real work.
 
-> Finding the signal is only half the problem. Applying it to the right place is the real work.
+## Lessons Learned
 
-In UI-heavy browser extensions, synchronization bugs often matter more than detection bugs.
+A few takeaways from this project:
 
-## Why This Architecture Works
+1. **Start with the visible user value.**  
+   DOM detection came first because it proved the feature was useful.
 
-The current architecture works because each layer has a clear job:
+2. **Treat identity as infrastructure.**  
+   If async results need to reconnect to the page, stable IDs are not optional.
 
-- **DOM detection** handles obvious visible cases quickly
-- **job identity** gives the system a stable internal key
-- **card registry** reconnects status to rerendered DOM nodes
-- **background prefetch** improves coverage
-- **cache policy** avoids repeated work
-- **queue policy** prevents request spikes
-- **route support** keeps behavior honest
-- **popup controls** make the system tunable
-- **debug logs** make the system observable
+3. **Control background work carefully.**  
+   Prefetch needs queue limits, cache rules, and rate-limit handling.
 
-None of these pieces are individually fancy.
+4. **Be honest about supported routes.**  
+   Supporting `/jobs/search/` clearly is better than pretending every LinkedIn jobs route works.
 
-The value comes from how they work together under real browser-extension constraints:
-
-- unstable target DOM
-- asynchronous UI updates
-- multiple runtime contexts
-- background request limits
-- user-facing latency expectations
-- page behavior the extension does not control
-
-That is what made the project interesting.
-
-Not the word matching. Not the red styling. The actual work was making the system keep doing the right thing while LinkedIn kept changing underneath it.
-
-## Lessons for Other Browser Extensions
-
-Here are the lessons I would reuse in future browser-extension projects.
-
-### 1. Start with the user-visible core
-
-Build the simplest thing that creates real user value.
-
-For this project, that was marking visible reposted jobs. Everything else came after that.
-
-### 2. Treat identity as infrastructure
-
-If async work needs to reconnect back to the page later, stable identity is not optional.
-
-A weak identity model will leak bugs everywhere.
-
-### 3. Do not let background work run wild
-
-Background fetching needs rules:
-
-- queue limits
-- cache reuse
-- retry policy
-- rate-limit handling
-- prioritization
-
-Otherwise, it becomes chaos with a network tab.
-
-### 4. Be honest about support boundaries
-
-A route support matrix is better than pretending every page variant works.
-
-Partial support should be explicit.
-
-### 5. Build observability early
-
-Once an extension spans content scripts, background workers, popup UI, storage, and a dynamic target page, debugging without logs becomes painful fast.
-
-Small projects still deserve good diagnostics.
+5. **Build observability early.**  
+   Debug logs are worth it once an extension spans multiple runtime contexts.
 
 ## Closing Thoughts
 
-LinkedIn Reposted Marker started as a small utility.
+LinkedIn Reposted Marker started as a small utility, but building it reliably required more architecture than expected.
 
-The original idea was just:
+The interesting part was not highlighting reposted jobs. The interesting part was keeping that highlight correct while LinkedIn constantly changed the page underneath it.
 
-> highlight reposted jobs so users can avoid wasting time.
+That is the real work of browser extensions: not just injecting behavior into a page, but making that behavior stay useful on top of someone else’s unstable UI.
 
-But making that simple feature reliable required a real architecture:
-
-- DOM scanning
-- identity extraction
-- card mapping
-- background prefetch
-- cache policy
-- queue control
-- route gating
-- popup controls
-- debug logs
-
-That is the real lesson from this project.
-
-Browser extensions are not just little scripts you inject into a page. At least, not if you want them to survive real-world usage.
-
-They are small distributed systems running inside a browser, attached to someone else’s constantly changing application, trying to be helpful without breaking things.
-
-Which is ridiculous.
-
-But also kind of fun.
+Ridiculous, but honestly kind of fun.
